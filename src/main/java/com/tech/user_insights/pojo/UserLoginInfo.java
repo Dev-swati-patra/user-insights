@@ -1,7 +1,6 @@
 package com.tech.user_insights.pojo;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
