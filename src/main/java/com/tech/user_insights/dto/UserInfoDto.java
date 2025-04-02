@@ -9,9 +9,9 @@ public class UserInfoDto {
 	private String userEmail;
 	private String userAge;
 	private String userPassword;
-	private String userCountry;
-	private String userStateCode;
-	private String userDistrictCode;
+	private String countryName;
+	private String stateName;
+	private String districtName;
 	private String userAddress;
 	private String userPancard;
 	private String userPassport;
