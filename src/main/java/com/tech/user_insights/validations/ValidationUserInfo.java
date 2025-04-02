@@ -31,10 +31,10 @@
 //		if (isNullOrEmpty(infoDto.getUserPassword())) {
 //
 //		}
-//		if (isNullOrEmpty(infoDto.getName())) {
+//		if (isNullOrEmpty(infoDto.getFullName())) {
 //
 //		}
-//		if (isNullOrEmpty(infoDto.getUserDistrict())) {
+//		if (isNullOrEmpty(infoDto.getUserDistrictCode())) {
 //
 //		}
 //		if (isNullOrEmpty(infoDto.getUserStateCode())) {

@@ -8,4 +8,6 @@ import com.tech.user_insights.pojo.UserInfo;
 @Repository
 public interface UserInfoRepo extends JpaRepository<UserInfo, Long> {
 
+	UserInfo findByUserName(String username);
+
 }
