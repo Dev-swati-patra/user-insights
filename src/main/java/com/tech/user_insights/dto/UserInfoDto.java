@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class UserInfoDto {
-	private Long userId;
 	private String userName;
 	private String userEmail;
+	private String userPassword;
 	private String name;
 	private String userStateCode;
 	private String userDistrict;
@@ -17,6 +17,5 @@ public class UserInfoDto {
 	private String userAadhar;
 	private String userPhoneNumber;
 	private String userAge;
-	private String isActive;
 
 }
