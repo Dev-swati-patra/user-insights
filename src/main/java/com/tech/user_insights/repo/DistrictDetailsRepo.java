@@ -8,6 +8,6 @@ import com.tech.user_insights.pojo.DistrictDetails;
 @Repository
 public interface DistrictDetailsRepo extends JpaRepository<DistrictDetails, Long> {
 	
-	Integer findByDistrictName(String districtName);
+	DistrictDetails findByDistrictName(String districtName);
 
 }

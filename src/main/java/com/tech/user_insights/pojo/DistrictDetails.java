@@ -29,5 +29,8 @@ public class DistrictDetails {
 
 	@Column(name = "district_short_name")
 	private String districtShortName;
+	
+	@Column(name = "state_code")
+	private Integer stateCode;
 
 }

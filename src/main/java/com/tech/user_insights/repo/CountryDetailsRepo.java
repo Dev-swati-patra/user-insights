@@ -8,5 +8,5 @@ import com.tech.user_insights.pojo.CountryDetails;
 @Repository
 public interface CountryDetailsRepo extends JpaRepository<CountryDetails, Long> {
 	
-	Integer findByCountryName(String countryName);
+	CountryDetails findByCountryName(String countryName);
 }
