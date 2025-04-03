@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.pojo.UserInfo;
+import com.tech.user_insights.repo.CountryDetailsRepo;
+import com.tech.user_insights.repo.DistrictDetailsRepo;
+import com.tech.user_insights.repo.StateDetailsrepo;
 import com.tech.user_insights.repo.UserInfoRepo;
 import com.tech.user_insights.responsedto.ErrorResponseDto;
 import com.tech.user_insights.responsedto.ResponseDto;
@@ -16,12 +19,19 @@ import com.tech.user_insights.validations.ValidationUserInfo;
 
 @Service
 public class AuthenticateServiceImpl implements AuthenticateService {
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private ValidationUserInfo validationUserInfo;
 	@Autowired
 	private UserInfoRepo userInfoRepo;
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private CountryDetailsRepo countryDetailsRepo;
+	@Autowired
+	private StateDetailsrepo stateDetailsrepo;
+	@Autowired
+	private DistrictDetailsRepo districtDetailsRepo;
 
 	@Override
 	public ResponseDto register_V1_0(UserInfoDto userInfoDto) {
@@ -35,12 +45,12 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				userInfo.setUserEmail(userInfoDto.getUserEmail());
 				userInfo.setUserPassword(passwordEncoder.encode(userInfoDto.getUserPassword()));
 				userInfo.setName(userInfoDto.getFullName());
-				userInfo.setUserStateCode(userInfoDto.getStateName());
-				userInfo.setUserDistrict(userInfoDto.getDistrictName());
+				userInfo.setUserCountryCode(countryDetailsRepo.findByCountryName(userInfoDto.getCountryName()));
+				userInfo.setUserStateCode(stateDetailsrepo.findByStateName(userInfoDto.getStateName()));
+				userInfo.setUserDistrictCode(districtDetailsRepo.findByDistrictName(userInfoDto.getDistrictName()));
 				userInfo.setUserAddress(userInfoDto.getUserAddress());
 				userInfo.setUserPancard(userInfoDto.getUserPancard());
 				userInfo.setUserPassport(userInfoDto.getUserPassport());
-				userInfo.setUserCountry(userInfoDto.getCountryName());
 				userInfo.setUserAadhar(userInfoDto.getUserAadhar());
 				userInfo.setUserPhoneNumber(Integer.parseInt(userInfoDto.getUserPhoneNumber()));
 				userInfo.setUserAge(Integer.parseInt(userInfoDto.getUserAge()));
