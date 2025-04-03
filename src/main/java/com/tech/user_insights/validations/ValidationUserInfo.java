@@ -3,7 +3,6 @@ package com.tech.user_insights.validations;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tech.user_insights.dto.UserInfoDto;
@@ -12,18 +11,13 @@ import com.tech.user_insights.responsedto.ErrorResponseDto;
 @Component
 public class ValidationUserInfo {
 
-	@Autowired
-	private ErrorResponseDto errorResponseDto;
-
 	public List<ErrorResponseDto> validateUserInfoData(UserInfoDto infoDto) {
 		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
 
 		if (null == infoDto.getUserName() || infoDto.getUserName().isEmpty()) {
-			errorResponseDto.setErrorCode(null);
 		}
 		if (null != infoDto.getUserName()) {
 			if (infoDto.getUserName().matches("")) {
-				errorResponseDto.setErrorCode(null);
 			}
 		}
 		if (isNullOrEmpty(infoDto.getUserEmail())) {

@@ -32,12 +32,15 @@ public class UserInfo {
 	
 	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "user_country_code")
+	private Integer userCountryCode;
 
 	@Column(name = "user_state_code")
-	private String userStateCode;
+	private Integer userStateCode;
 
-	@Column(name = "user_district")
-	private String userDistrict;
+	@Column(name = "user_district_code")
+	private Integer userDistrictCode;
 
 	@Column(name = "user_address")
 	private String userAddress;
@@ -47,9 +50,6 @@ public class UserInfo {
 
 	@Column(name = "user_passport")
 	private String userPassport;
-
-	@Column(name = "user_country")
-	private String userCountry;
 
 	@Column(name = "user_aadhar")
 	private String userAadhar;
