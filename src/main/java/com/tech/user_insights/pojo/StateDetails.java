@@ -30,4 +30,6 @@ public class StateDetails {
     @Column(name = "state_short_name")
     private String stateShortName;
 
+    @Column(name = "country_code")
+	private Integer countryCode;
 }

@@ -8,6 +8,6 @@ import com.tech.user_insights.pojo.StateDetails;
 @Repository
 public interface StateDetailsrepo extends JpaRepository<StateDetails, Long> {
 	
-	Integer findByStateName(String stateName);
+	StateDetails findByStateName(String stateName);
 
 }

@@ -55,7 +55,7 @@ public class UserInfo {
 	private String userAadhar;
 
 	@Column(name = "user_phone_number")
-	private Integer userPhoneNumber;
+	private Long userPhoneNumber;
 
 	@Column(name = "user_age")
 	private Integer userAge;
