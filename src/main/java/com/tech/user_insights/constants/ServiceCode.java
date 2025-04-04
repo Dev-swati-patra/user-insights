@@ -24,6 +24,8 @@ public enum ServiceCode {
 	SVC020("SVC020", "Either Pancard or Passport or Aadhaar must be present."),
 	SVC021("SVC021", "Pancard must be valid."),
 	SVC022("SVC022", "Asdhaar must be valid."),
+	SVC023("SVC023", "Incorrect password!"),
+	SVC024("SVC024", "Newpassword and confirmpassword must be same."),
 	SVC100("SVC100", "Unexpected Error!");
 
 	String code;

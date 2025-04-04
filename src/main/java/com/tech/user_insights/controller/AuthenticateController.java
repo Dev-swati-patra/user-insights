@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tech.user_insights.dto.ChangePasswordRequest;
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.responsedto.ResponseDto;
 import com.tech.user_insights.service.AuthenticateService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,7 +28,6 @@ public class AuthenticateController {
 		ResponseDto response = new ResponseDto();
 		try {
 			response = authenticateService.register_V1_0(userInfoDto);
-			response.setStatus("SUCCESS");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -36,15 +38,37 @@ public class AuthenticateController {
 	}
 
 	@PostMapping("/signIn/V1.0")
-	public ResponseEntity<ResponseDto> signIn_V1_0(@RequestBody UserLoginInfoDto infoDto) {
-		ResponseDto responseDto = new ResponseDto();
+	public ResponseEntity<String> signIn_V1_0(@RequestBody UserLoginInfoDto infoDto, HttpServletRequest httpRequest) {
+		String token = null;
 		try {
-			responseDto = authenticateService.signIn_V1_0(infoDto);
+			token = authenticateService.signIn_V1_0(infoDto, httpRequest);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return new ResponseEntity<>(token, HttpStatus.OK);
 
+	}
+
+	@PostMapping("/forgetPassword/V1.0")
+	public void forgetPassword_V1_0() {
+
+	}
+
+	@PostMapping("/changePassword/V1.0")
+	public ResponseEntity<String> changePassword_V1_0(@RequestBody ChangePasswordRequest changePasswordRequest) {
+		try {
+			authenticateService.changePassword_V1_0(changePasswordRequest);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
+
+	}
+
+	@PostMapping("/logOut/V1.0")
+	public void logOut_V1_0() {
+
 	}
 
 }
