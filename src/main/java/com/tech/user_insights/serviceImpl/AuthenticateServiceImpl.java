@@ -1,5 +1,6 @@
 package com.tech.user_insights.serviceImpl;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.dto.UserInfoDto;
+import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.pojo.UserInfo;
+import com.tech.user_insights.pojo.UserLoginInfo;
 import com.tech.user_insights.responsedto.ErrorResponseDto;
 import com.tech.user_insights.responsedto.ResponseDto;
 import com.tech.user_insights.service.AuthenticateService;
@@ -19,10 +22,10 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private ValidationUserInfo validationUserInfo;
-	
+
 	@Autowired
 	private MasterService masterService;
 
@@ -48,8 +51,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				userInfo.setUserPhoneNumber(Long.parseLong(userInfoDto.getUserPhoneNumber()));
 				userInfo.setUserAge(Integer.parseInt(userInfoDto.getUserAge()));
 				masterService.saveUserInfoDetails(userInfo);
-			}
-			else {
+			} else {
 				responseDto.setStatus("Fail");
 				responseDto.setListErrResponse(errResData);
 			}
@@ -58,6 +60,33 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		}
 		return responseDto;
 
+	}
+
+	@Override
+	public ResponseDto signIn_V1_0(UserLoginInfoDto infoDto) {
+		ResponseDto dto = new ResponseDto();
+		UserLoginInfo loginInfo = null;
+		try {
+			UserInfo userInfo = masterService.getDataByUserName(infoDto.getUserName());
+			if (null != userInfo) {
+				loginInfo = new UserLoginInfo();
+				loginInfo.setUserName(infoDto.getUserName());
+				loginInfo.setLoginTime(new Timestamp(System.currentTimeMillis()));
+				loginInfo.setLogoutTime(null);
+				loginInfo.setBrowser("");
+				loginInfo.setLoginStatus(true);
+				loginInfo.setActiveTime(null);
+				loginInfo.setIpAddress(null);
+				masterService.saveUserLoginInfoDetails(loginInfo);
+			}
+			else {
+				dto.setStatus("Fail! User name not exist.");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 }
