@@ -1,6 +1,7 @@
 package com.tech.user_insights.service;
 
 import com.tech.user_insights.pojo.UserInfo;
+import com.tech.user_insights.pojo.UserLoginInfo;
 
 public interface MasterService {
 
@@ -31,5 +32,7 @@ public interface MasterService {
 	boolean isValidStateName(String stateName, String countryName);
 
 	void saveUserInfoDetails(UserInfo userInfo);
+
+	void saveUserLoginInfoDetails(UserLoginInfo loginInfo);
 
 }

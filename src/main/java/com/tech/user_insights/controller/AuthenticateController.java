@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tech.user_insights.dto.UserInfoDto;
+import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.responsedto.ResponseDto;
 import com.tech.user_insights.service.AuthenticateService;
-
 
 @RestController
 @RequestMapping("/auth")
@@ -36,7 +36,13 @@ public class AuthenticateController {
 	}
 
 	@PostMapping("/signIn/V1.0")
-	public ResponseEntity<ResponseDto> signIn_V1_0() {
+	public ResponseEntity<ResponseDto> signIn_V1_0(@RequestBody UserLoginInfoDto infoDto) {
+		ResponseDto responseDto = new ResponseDto();
+		try {
+			responseDto = authenticateService.signIn_V1_0(infoDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return null;
 	}
