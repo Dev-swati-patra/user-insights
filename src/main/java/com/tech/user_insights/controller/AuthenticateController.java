@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tech.user_insights.dto.ChangePasswordRequest;
+import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.responsedto.ResponseDto;
@@ -50,8 +51,26 @@ public class AuthenticateController {
 	}
 
 	@PostMapping("/forgetPassword/V1.0")
-	public void forgetPassword_V1_0() {
+	public ResponseEntity<String> forgetPassword_V1_0(@RequestBody ForgetPasswordRequest request) {
+		try {
+			authenticateService.forgetPassword_V1_0(request);
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>("OTP send successfully", HttpStatus.OK);
+
+	}
+	@PostMapping("/verify_otp/V1.0")
+	public ResponseEntity<String> verify_otp_V1_0(@RequestBody ForgetPasswordRequest request) {
+		try {
+			authenticateService.verify_otp_V1_0(request);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>("OTP send successfully", HttpStatus.OK);
+		
 	}
 
 	@PostMapping("/changePassword/V1.0")
