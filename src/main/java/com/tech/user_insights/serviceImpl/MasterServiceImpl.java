@@ -148,9 +148,10 @@ public class MasterServiceImpl implements MasterService {
 	@Override
 	public OtpVerification getOtpVerificationData(ForgetPasswordRequest request) {
 		OtpVerification otpVerification = null;
-		if (!StringUtils.isEmpty(request.getUserEmail())) {
-			otpVerification = otpVerificationRepo.findByUserEmail(request.getUserEmail());
-		} else if (!StringUtils.isEmpty(request.getUserName())) {
+//		if (!StringUtils.isEmpty(request.getUserEmail())) {
+//			otpVerification = otpVerificationRepo.findByUserEmail(request.getUserEmail());
+//		} else 
+		if (!StringUtils.isEmpty(request.getUserName())) {
 			otpVerification = otpVerificationRepo.findByUserName(request.getUserName());
 
 		}

@@ -144,14 +144,16 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			if (!StringUtils.isEmpty(request.getUserName())) {
 				data = masterService.getDataByUserName(request.getUserName());
 
-			} else if (!StringUtils.isEmpty(request.getUserEmail())) {
-				data = masterService.getDataByUSerEmail(request.getUserEmail());
-			} else {
-				responseDto.setStatus("FAIL");
-				responseDto.setListErrResponse(
-						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
-
 			}
+//			else if (!StringUtils.isEmpty(request.getUserEmail())) {
+//				data = masterService.getDataByUSerEmail(request.getUserEmail());
+//			} 
+//			else {
+//				responseDto.setStatus("FAIL");
+//				responseDto.setListErrResponse(
+//						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+//
+//			}
 			if (null != data) {
 				String otp = StringUtils.generateOtp();
 				log.info(">>>>>>>>>>>>>>>>>>>>>>>>>> OTP:---" + otp);
@@ -161,10 +163,11 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				otpVerification.setUserName(data.getUserName());
 				otpVerification.setExpiryTime(LocalDateTime.now().plusMinutes(30));
 				masterService.saveOtpVerificationDetails(otpVerification);
+				responseDto.setStatus("OTP sent successfully");
 			} else {
 				responseDto.setStatus("FAIL");
 				responseDto.setListErrResponse(
-						List.of(new ErrorResponseDto(ServiceCode.SVC025.getCode(), ServiceCode.SVC025.getMessage())));
+						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
 
 			}
 		} catch (Exception e) {
@@ -183,6 +186,11 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			if (null != request.getOtp() && (request.getOtp().equals(otpVerification.getOtp())
 					&& otpVerification.getExpiryTime().isAfter(LocalDateTime.now()))) {
 				responseDto.setStatus("OTP verify Successfully...");
+			} else {
+				responseDto.setStatus("FAIL");
+				responseDto.setListErrResponse(
+						List.of(new ErrorResponseDto(ServiceCode.SVC027.getCode(), ServiceCode.SVC027.getMessage())));
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

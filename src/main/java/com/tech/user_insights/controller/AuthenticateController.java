@@ -51,26 +51,29 @@ public class AuthenticateController {
 	}
 
 	@PostMapping("/forgetPassword/V1.0")
-	public ResponseEntity<String> forgetPassword_V1_0(@RequestBody ForgetPasswordRequest request) {
+	public ResponseEntity<ResponseDto> forgetPassword_V1_0(@RequestBody ForgetPasswordRequest request) {
+		ResponseDto response = new ResponseDto();
 		try {
-			authenticateService.forgetPassword_V1_0(request);
+			response = authenticateService.forgetPassword_V1_0(request);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<>("OTP send successfully", HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
+
 	@PostMapping("/verify_otp/V1.0")
-	public ResponseEntity<String> verify_otp_V1_0(@RequestBody ForgetPasswordRequest request) {
+	public ResponseEntity<ResponseDto> verify_otp_V1_0(@RequestBody ForgetPasswordRequest request) {
+		ResponseDto response = new ResponseDto();
 		try {
-			authenticateService.verify_otp_V1_0(request);
-			
+			response = authenticateService.verify_otp_V1_0(request);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<>("OTP send successfully", HttpStatus.OK);
-		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
 	}
 
 	@PostMapping("/changePassword/V1.0")
