@@ -1,6 +1,7 @@
 package com.tech.user_insights.serviceImpl;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.ClientInfoDetails;
 import com.tech.user_insights.constants.ServiceCode;
+import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.ChangePasswordRequest;
+import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.dto.UserLoginInfoDto;
+import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 import com.tech.user_insights.responsedto.ErrorResponseDto;
@@ -26,8 +30,10 @@ import com.tech.user_insights.service.MasterService;
 import com.tech.user_insights.validations.ValidationUserInfo;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AuthenticateServiceImpl implements AuthenticateService {
 
 	@Autowired
@@ -127,6 +133,61 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public ResponseDto forgetPassword_V1_0(ForgetPasswordRequest request) {
+		ResponseDto responseDto = new ResponseDto();
+		try {
+
+			UserInfo data = null;
+			if (!StringUtils.isEmpty(request.getUserName())) {
+				data = masterService.getDataByUserName(request.getUserName());
+
+			} else if (!StringUtils.isEmpty(request.getUserEmail())) {
+				data = masterService.getDataByUSerEmail(request.getUserEmail());
+			} else {
+				responseDto.setStatus("FAIL");
+				responseDto.setListErrResponse(
+						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+
+			}
+			if (null != data) {
+				String otp = StringUtils.generateOtp();
+				log.info(">>>>>>>>>>>>>>>>>>>>>>>>>> OTP:---" + otp);
+				OtpVerification otpVerification = new OtpVerification();
+				otpVerification.setOtp(otp);
+				otpVerification.setUserEmail(data.getUserEmail());
+				otpVerification.setUserName(data.getUserName());
+				otpVerification.setExpiryTime(LocalDateTime.now().plusMinutes(30));
+				masterService.saveOtpVerificationDetails(otpVerification);
+			} else {
+				responseDto.setStatus("FAIL");
+				responseDto.setListErrResponse(
+						List.of(new ErrorResponseDto(ServiceCode.SVC025.getCode(), ServiceCode.SVC025.getMessage())));
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return responseDto;
+
+	}
+
+	@Override
+	public ResponseDto verify_otp_V1_0(ForgetPasswordRequest request) {
+		ResponseDto responseDto = new ResponseDto();
+		try {
+			OtpVerification otpVerification = null;
+			otpVerification = masterService.getOtpVerificationData(request);
+			if (null != request.getOtp() && (request.getOtp().equals(otpVerification.getOtp())
+					&& otpVerification.getExpiryTime().isAfter(LocalDateTime.now()))) {
+				responseDto.setStatus("OTP verify Successfully...");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return responseDto;
 	}
 
 }

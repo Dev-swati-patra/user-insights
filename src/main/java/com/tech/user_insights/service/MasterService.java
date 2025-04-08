@@ -1,5 +1,7 @@
 package com.tech.user_insights.service;
 
+import com.tech.user_insights.dto.ForgetPasswordRequest;
+import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 
@@ -34,5 +36,11 @@ public interface MasterService {
 	void saveUserInfoDetails(UserInfo userInfo);
 
 	void saveUserLoginInfoDetails(UserLoginInfo loginInfo);
+
+	UserInfo getDataByUSerEmail(String userEmail);
+
+	void saveOtpVerificationDetails(OtpVerification otpVerification);
+
+	OtpVerification getOtpVerificationData(ForgetPasswordRequest request);
 
 }

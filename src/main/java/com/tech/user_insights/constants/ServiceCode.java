@@ -26,6 +26,8 @@ public enum ServiceCode {
 	SVC022("SVC022", "Asdhaar must be valid."),
 	SVC023("SVC023", "Incorrect password!"),
 	SVC024("SVC024", "Newpassword and confirmpassword must be same."),
+	SVC025("SVC025", "Please provide valid details."),
+	SVC026("SVC026", "Either user name or user email is required."),
 	SVC100("SVC100", "Unexpected Error!");
 
 	String code;

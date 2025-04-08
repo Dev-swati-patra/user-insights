@@ -3,13 +3,17 @@ package com.tech.user_insights.serviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tech.user_insights.constants.StringUtils;
+import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
+import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.StateDetails;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 import com.tech.user_insights.repo.CountryDetailsRepo;
 import com.tech.user_insights.repo.DistrictDetailsRepo;
+import com.tech.user_insights.repo.OtpVerificationRepo;
 import com.tech.user_insights.repo.StateDetailsrepo;
 import com.tech.user_insights.repo.UserInfoRepo;
 import com.tech.user_insights.repo.UserLoginInfoRepo;
@@ -35,6 +39,9 @@ public class MasterServiceImpl implements MasterService {
 
 	@Autowired
 	private CountryDetailsRepo countryDetailsRepo;
+
+	@Autowired
+	private OtpVerificationRepo otpVerificationRepo;
 
 	@Override
 	public boolean isStateNamePresent(String stateName) {
@@ -126,6 +133,28 @@ public class MasterServiceImpl implements MasterService {
 	@Override
 	public void saveUserLoginInfoDetails(UserLoginInfo loginInfo) {
 		loginInfoRepo.save(loginInfo);
+	}
+
+	@Override
+	public UserInfo getDataByUSerEmail(String userEmail) {
+		return infoRepo.findByUserEmail(userEmail);
+	}
+
+	@Override
+	public void saveOtpVerificationDetails(OtpVerification otpVerification) {
+		otpVerificationRepo.save(otpVerification);
+	}
+
+	@Override
+	public OtpVerification getOtpVerificationData(ForgetPasswordRequest request) {
+		OtpVerification otpVerification = null;
+		if (!StringUtils.isEmpty(request.getUserEmail())) {
+			otpVerification = otpVerificationRepo.findByUserEmail(request.getUserEmail());
+		} else if (!StringUtils.isEmpty(request.getUserName())) {
+			otpVerification = otpVerificationRepo.findByUserName(request.getUserName());
+
+		}
+		return otpVerification;
 	}
 
 }

@@ -10,4 +10,6 @@ public interface UserInfoRepo extends JpaRepository<UserInfo, Long> {
 
 	UserInfo findByUserName(String username);
 
+	UserInfo findByUserEmail(String userEmail);
+
 }
