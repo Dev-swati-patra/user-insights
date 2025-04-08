@@ -11,12 +11,14 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface AuthenticateService {
 	ResponseDto register_V1_0(UserInfoDto userInfoDto);
 
-	String signIn_V1_0(UserLoginInfoDto infoDto,HttpServletRequest httpServletRequest);
+	String signIn_V1_0(UserLoginInfoDto infoDto, HttpServletRequest httpServletRequest);
 
-	void changePassword_V1_0(ChangePasswordRequest changePasswordRequest);
+	ResponseDto changePassword_V1_0(ChangePasswordRequest changePasswordRequest);
 
 	ResponseDto forgetPassword_V1_0(ForgetPasswordRequest request);
 
 	ResponseDto verify_otp_V1_0(ForgetPasswordRequest request);
+
+	ResponseDto resetPassword_v1_0(ChangePasswordRequest passwordRequest);
 
 }

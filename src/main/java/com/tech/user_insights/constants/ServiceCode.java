@@ -30,6 +30,8 @@ public enum ServiceCode {
 //	SVC026("SVC026", "Either user name or user email is required."),
 	SVC026("SVC026", "User name does not exist."),
 	SVC027("SVC027", "OTP does not match."),
+	SVC028("SVC028", "New password and confirm password must be required."),
+	SVC029("SVC029", "User name must be required."),
 	SVC100("SVC100", "Unexpected Error!");
 
 	String code;

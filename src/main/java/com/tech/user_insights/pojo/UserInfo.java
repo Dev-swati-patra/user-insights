@@ -1,7 +1,11 @@
 package com.tech.user_insights.pojo;
 
+import com.tech.user_insights.constants.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -62,5 +66,9 @@ public class UserInfo {
 
 	@Column(name = "is_active")
 	private Boolean isActive;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "user_role")
+	private Role userRole;
 
 }

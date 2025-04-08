@@ -76,15 +76,28 @@ public class AuthenticateController {
 
 	}
 
-	@PostMapping("/changePassword/V1.0")
-	public ResponseEntity<String> changePassword_V1_0(@RequestBody ChangePasswordRequest changePasswordRequest) {
+	@PostMapping("/resetPassword/V1.0")
+	public ResponseEntity<ResponseDto> resetPassword_v1_0(@RequestBody ChangePasswordRequest passwordRequest) {
+		ResponseDto dto = new ResponseDto();
 		try {
-			authenticateService.changePassword_V1_0(changePasswordRequest);
+			dto = authenticateService.resetPassword_v1_0(passwordRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+
+	}
+
+	@PostMapping("/changePassword/V1.0")
+	public ResponseEntity<ResponseDto> changePassword_V1_0(@RequestBody ChangePasswordRequest changePasswordRequest) {
+		ResponseDto dto = new ResponseDto();
+		try {
+			dto = authenticateService.changePassword_V1_0(changePasswordRequest);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
 
 	}
 
