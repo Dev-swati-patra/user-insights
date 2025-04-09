@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.ClientInfoDetails;
+import com.tech.user_insights.constants.Role;
 import com.tech.user_insights.constants.ServiceCode;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.ChangePasswordRequest;
@@ -25,6 +27,7 @@ import com.tech.user_insights.pojo.UserLoginInfo;
 import com.tech.user_insights.responsedto.ErrorResponseDto;
 import com.tech.user_insights.responsedto.ResponseDto;
 import com.tech.user_insights.security.service.JwtService;
+import com.tech.user_insights.security.service.UserService;
 import com.tech.user_insights.service.AuthenticateService;
 import com.tech.user_insights.service.MasterService;
 import com.tech.user_insights.validations.ValidationUserInfo;
@@ -36,6 +39,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class AuthenticateServiceImpl implements AuthenticateService {
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -72,6 +78,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			userInfo.setUserAadhar(userInfoDto.getUserAadhar());
 			userInfo.setUserPhoneNumber(Long.parseLong(userInfoDto.getUserPhoneNumber()));
 			userInfo.setUserAge(Integer.parseInt(userInfoDto.getUserAge()));
+			userInfo.setUserRole(Role.USER);
+			userInfo.setIsActive(true);
 			masterService.saveUserInfoDetails(userInfo);
 			responseDto.setStatus("SUCCESS");
 
@@ -90,18 +98,21 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				.authenticate(new UsernamePasswordAuthenticationToken(infoDto.getUserName(), infoDto.getPassword()));
 		if (authentication.isAuthenticated()) {
 			UserInfo userInfo = masterService.getDataByUserName(infoDto.getUserName());
-			if (null != userInfo) {
-				loginInfo = new UserLoginInfo();
-				loginInfo.setUserName(infoDto.getUserName());
-				loginInfo.setLoginTime(new Timestamp(System.currentTimeMillis()));
-//				loginInfo.setLogoutTime(null);
-				loginInfo.setBrowser("chrome");
-				loginInfo.setLoginStatus(true);
-				loginInfo.setActiveTime(null);
-				loginInfo.setIpAddress(ClientInfoDetails.getClientIpAddress(request));
-				masterService.saveUserLoginInfoDetails(loginInfo);
+			if (userInfo == null || !userInfo.getIsActive()) {
+				throw new UsernameNotFoundException("User is inactive or not found");
 			}
-			return jwtService.generateToken(infoDto.getUserName());
+			loginInfo = new UserLoginInfo();
+			loginInfo.setUserName(infoDto.getUserName());
+			loginInfo.setLoginTime(new Timestamp(System.currentTimeMillis()));
+//				loginInfo.setLogoutTime(null);
+			loginInfo.setBrowser("chrome");
+			loginInfo.setLoginStatus(true);
+			loginInfo.setActiveTime(new Timestamp(System.currentTimeMillis()));
+			loginInfo.setIpAddress(ClientInfoDetails.getClientIpAddress(request));
+			masterService.saveUserLoginInfoDetails(loginInfo);
+
+			UserDetails user = userService.loadUserByUsername(infoDto.getUserName());
+			return jwtService.generateToken(user);
 		} else {
 			throw new UsernameNotFoundException("Invalid user request");
 		}
@@ -215,11 +226,21 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					OtpVerification otpData = masterService.getOtpVerificationData(changePasswordRequest.getUserName());
 					if (StringUtils.isValidObj(otpData)) {
 						if (otpData.isVerified() && otpData.getExpiryTime().isAfter(LocalDateTime.now())) {
-							userInfo.setUserPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-							masterService.saveUserInfoDetails(userInfo);
-							dto.setStatus("SUCCESS");
-							dto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC001.getCode(),
-									ServiceCode.SVC001.getMessage())));
+							boolean passwordValidate = validationUserInfo
+									.passwordValidate(changePasswordRequest.getNewPassword());
+							if (!passwordValidate) {
+								dto.setStatus("FAIL");
+								dto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC007.getCode(),
+										ServiceCode.SVC007.getMessage())));
+
+							} else {
+								userInfo.setUserPassword(
+										passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+								masterService.saveUserInfoDetails(userInfo);
+								dto.setStatus("SUCCESS");
+								dto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC001.getCode(),
+										ServiceCode.SVC001.getMessage())));
+							}
 						} else {
 							dto.setStatus("FAIL");
 							dto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC027.getCode(),

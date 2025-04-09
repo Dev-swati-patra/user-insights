@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.StringUtils;
-import com.tech.user_insights.dto.ChangePasswordRequest;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
 import com.tech.user_insights.pojo.OtpVerification;
@@ -157,6 +156,5 @@ public class MasterServiceImpl implements MasterService {
 		}
 		return otpVerification;
 	}
-
 
 }
