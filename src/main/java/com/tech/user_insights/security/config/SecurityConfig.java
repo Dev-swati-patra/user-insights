@@ -50,16 +50,20 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-	    return httpSecurity.csrf(csrf -> csrf.disable())
-	            .cors(cors -> cors.disable())
-	            .authorizeHttpRequests(auth -> auth
-	                .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()  // Allow access to Swagger endpoints
-	                .anyRequest().authenticated())  // Secure all other endpoints
-	            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	            .authenticationProvider(auththenticationProvider())
-	            .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
-	            .addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class)  // JWT filter
-	            .build();
+		return httpSecurity.csrf(csrf -> csrf.disable()).cors(cors -> cors.disable())
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/auth/register/V1.0", "/auth/signIn/V1.0", "/auth/forgetPassword/V1.0",
+								"/auth/verify_otp/V1.0", "/auth/resetPassword/V1.0", "/swagger-ui/**",
+								"/v3/api-docs/**", "/swagger-ui.html")
+						.permitAll().requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/user/**")
+						.hasAnyRole("USER", "ADMIN") // Allow access to Swagger endpoints
+						.anyRequest().authenticated()) // Secure all other endpoints
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authenticationProvider(auththenticationProvider())
+				.exceptionHandling(
+						exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
+				.addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT filter
+				.build();
 	}
 
 	@Bean

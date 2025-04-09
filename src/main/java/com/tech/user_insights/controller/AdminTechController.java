@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin")
 @Slf4j
-public class UserTechcController {
-
-	@PostMapping("/get")
-	public String publioc() {
-		System.out.println("Entering");
-		return "Welcome to user controller.";
-	}
+public class AdminTechController {
 	
+	@PostMapping("/addBooks/V1.0")
+	public String addBooks_V1_0() {
+		System.out.println("Entering");
+		return "Welcome to admin controller.";
+	}
+
 }

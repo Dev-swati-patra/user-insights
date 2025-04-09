@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.StringUtils;
-import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
 import com.tech.user_insights.pojo.OtpVerification;
@@ -146,12 +145,13 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public OtpVerification getOtpVerificationData(ForgetPasswordRequest request) {
+	public OtpVerification getOtpVerificationData(String userName) {
 		OtpVerification otpVerification = null;
-		if (!StringUtils.isEmpty(request.getUserEmail())) {
-			otpVerification = otpVerificationRepo.findByUserEmail(request.getUserEmail());
-		} else if (!StringUtils.isEmpty(request.getUserName())) {
-			otpVerification = otpVerificationRepo.findByUserName(request.getUserName());
+//		if (!StringUtils.isEmpty(request.getUserEmail())) {
+//			otpVerification = otpVerificationRepo.findByUserEmail(request.getUserEmail());
+//		} else 
+		if (!StringUtils.isEmpty(userName)) {
+			otpVerification = otpVerificationRepo.findByUserName(userName);
 
 		}
 		return otpVerification;

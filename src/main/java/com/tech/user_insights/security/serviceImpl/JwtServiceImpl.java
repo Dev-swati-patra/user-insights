@@ -25,13 +25,15 @@ public class JwtServiceImpl implements JwtService {
 	private static final String secret = "jwtTokenKey2144543545344134543535451345454351345451435234561435562562561556536464565464564564534656567567678768";
 
 	@Override
-	public String generateToken(String userName) {
+	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
-		return doGenerateToken(claims, userName);
+		return doGenerateToken(claims, userDetails);
 	}
 
-	private String doGenerateToken(Map<String, Object> claims, String subject) {
-		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+	private String doGenerateToken(Map<String, Object> claims, UserDetails userDetails) {
+		return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername())
+				.claim("role", userDetails.getAuthorities().iterator().next().getAuthority())
+				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}

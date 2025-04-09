@@ -51,37 +51,53 @@ public class AuthenticateController {
 	}
 
 	@PostMapping("/forgetPassword/V1.0")
-	public ResponseEntity<String> forgetPassword_V1_0(@RequestBody ForgetPasswordRequest request) {
+	public ResponseEntity<ResponseDto> forgetPassword_V1_0(@RequestBody ForgetPasswordRequest request) {
+		ResponseDto response = new ResponseDto();
 		try {
-			authenticateService.forgetPassword_V1_0(request);
+			response = authenticateService.forgetPassword_V1_0(request);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<>("OTP send successfully", HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
+
 	@PostMapping("/verify_otp/V1.0")
-	public ResponseEntity<String> verify_otp_V1_0(@RequestBody ForgetPasswordRequest request) {
+	public ResponseEntity<ResponseDto> verify_otp_V1_0(@RequestBody ForgetPasswordRequest request) {
+		ResponseDto response = new ResponseDto();
 		try {
-			authenticateService.verify_otp_V1_0(request);
-			
+			response = authenticateService.verify_otp_V1_0(request);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ResponseEntity<>("OTP send successfully", HttpStatus.OK);
-		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+
+	@PostMapping("/resetPassword/V1.0")
+	public ResponseEntity<ResponseDto> resetPassword_v1_0(@RequestBody ChangePasswordRequest passwordRequest) {
+		ResponseDto dto = new ResponseDto();
+		try {
+			dto = authenticateService.resetPassword_v1_0(passwordRequest);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+
 	}
 
 	@PostMapping("/changePassword/V1.0")
-	public ResponseEntity<String> changePassword_V1_0(@RequestBody ChangePasswordRequest changePasswordRequest) {
+	public ResponseEntity<ResponseDto> changePassword_V1_0(@RequestBody ChangePasswordRequest changePasswordRequest) {
+		ResponseDto dto = new ResponseDto();
 		try {
-			authenticateService.changePassword_V1_0(changePasswordRequest);
+			dto = authenticateService.changePassword_V1_0(changePasswordRequest);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
 
 	}
 

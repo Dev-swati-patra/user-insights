@@ -37,8 +37,7 @@ public class ValidationUserInfo {
 		if (StringUtils.isEmpty(infoDto.getUserPassword())) {
 			errorRespnse.add(setErrorResponse(ServiceCode.SVC006));
 
-		} else if (!infoDto.getUserPassword()
-				.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
+		} else if (!passwordValidate(infoDto.getUserPassword())) {
 
 			errorRespnse.add(setErrorResponse(ServiceCode.SVC007));
 		}
@@ -96,6 +95,11 @@ public class ValidationUserInfo {
 		dto.setErrorCode(serviceCode.getCode());
 		dto.setErrorDesc(serviceCode.getMessage());
 		return dto;
+
+	}
+
+	public boolean passwordValidate(String password) {
+		return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 
 	}
 
