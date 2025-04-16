@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.tech.user_insights.pojo.UserInfo;
 
 @Repository
-public interface UserInfoRepo extends JpaRepository<UserInfo, Long> {
+public interface UserInfoRepo extends JpaRepository<UserInfo, Integer> {
 
 	UserInfo findByUserName(String username);
 

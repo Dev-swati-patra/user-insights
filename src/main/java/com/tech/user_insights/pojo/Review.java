@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,23 +16,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reviews", uniqueConstraints = @UniqueConstraint(name = "uq_user_book_review", columnNames = { "user_id",
-		"book_id" }))
+@Table(name = "reviews", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "book_id" }) })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Review {
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_review_user"))
+	@JoinColumn(name = "user_id")
 	private UserInfo user;
 
 	@ManyToOne
-	@JoinColumn(name = "book_id", nullable = false, foreignKey = @ForeignKey(name = "fk_review_book"))
+	@JoinColumn(name = "book_id")
 	private BookDetails book;
 
 	@Column(nullable = false)
@@ -42,7 +40,7 @@ public class Review {
 	@Column(columnDefinition = "TEXT")
 	private String comment;
 
-	@Column(name = "created_at", updatable = false, insertable = false)
+	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 }

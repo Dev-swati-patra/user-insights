@@ -20,10 +20,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfo {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId;
+	@Column(name = "user_id")
+	private Integer userId;
 
 	@Column(name = "user_name")
 	private String userName;
@@ -33,10 +34,10 @@ public class UserInfo {
 
 	@Column(name = "user_password")
 	private String userPassword;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "user_country_code")
 	private Integer userCountryCode;
 
@@ -66,7 +67,7 @@ public class UserInfo {
 
 	@Column(name = "is_active")
 	private Boolean isActive;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "user_role")
 	private Role userRole;
