@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.StringUtils;
+import com.tech.user_insights.dto.BookDetailsDto;
 import com.tech.user_insights.pojo.BookDetails;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
@@ -166,15 +167,16 @@ public class MasterServiceImpl implements MasterService {
 	public void saveBookDetails(BookDetails bookDetails) {
 		bookdetailsRepo.save(bookDetails);
 	}
-//
-//	@Override
-//	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
+
+	@Override
+	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
+		return  bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
 //		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
-//	}
-//
-//	@Override
-//	public void deleteBookDetailsData(BookDetails details) {
-//		bookdetailsRepo.delete(details);
-//	}
+	}
+
+	@Override
+	public void deleteBookDetailsData(BookDetails details) {
+		bookdetailsRepo.delete(details);
+	}
 
 }

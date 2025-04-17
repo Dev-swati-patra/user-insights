@@ -33,30 +33,30 @@ public class AdminTechController {
 
 		return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.OK);
 	}
-//
-//	@PostMapping("/deleteBooks/V1.0")
-//	public ResponseEntity<ResponseDto> deleteBooks_v1_0(@RequestBody BookDetailsDto bookDetailsDto) {
-//		ResponseDto dto = new ResponseDto();
-//		try {
-//			dto = adminTechService.deleteBooks_v1_0(bookDetailsDto);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
-//
-//	}
-//
-//	@PostMapping("/modifyBooks/V1.0")
-//	public ResponseEntity<ResponseDto> modifyBooks_V1_0(@RequestBody BookDetailsDto bookDetailsDto) {
-//		ResponseDto dto = new ResponseDto();
-//		try {
-//			dto = adminTechService.modifyBooks_V1_0(bookDetailsDto);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
-//
-//
-//	}
+
+	@PostMapping("/deleteBooks/V1.0")
+	public ResponseEntity<ResponseDto> deleteBooks_v1_0(@RequestBody BookDetailsDto bookDetailsDto) {
+		ResponseDto dto = new ResponseDto();
+		try {
+			dto = adminTechService.deleteBooks_v1_0(bookDetailsDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
+
+	}
+
+	@PostMapping("/modifyBooks/V1.0")
+	public ResponseEntity<ResponseDto> modifyBooks_V1_0(@RequestBody BookDetailsDto bookDetailsDto) {
+		ResponseDto dto = new ResponseDto();
+		try {
+			dto = adminTechService.modifyBooks_V1_0(bookDetailsDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
+
+
+	}
 
 }
