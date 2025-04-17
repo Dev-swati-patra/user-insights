@@ -1,5 +1,7 @@
 package com.tech.user_insights.service;
 
+import com.tech.user_insights.dto.BookDetailsDto;
+import com.tech.user_insights.pojo.BookDetails;
 import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
@@ -41,6 +43,12 @@ public interface MasterService {
 	void saveOtpVerificationDetails(OtpVerification otpVerification);
 
 	OtpVerification getOtpVerificationData(String userName);
+
+	void saveBookDetails(BookDetails bookDetails);
+
+	BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto);
+
+	void deleteBookDetailsData(BookDetails details);
 
 
 }

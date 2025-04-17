@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.StringUtils;
+import com.tech.user_insights.dto.BookDetailsDto;
+import com.tech.user_insights.pojo.BookDetails;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
 import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.StateDetails;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
+import com.tech.user_insights.repo.BookdetailsRepo;
 import com.tech.user_insights.repo.CountryDetailsRepo;
 import com.tech.user_insights.repo.DistrictDetailsRepo;
 import com.tech.user_insights.repo.OtpVerificationRepo;
@@ -41,6 +44,9 @@ public class MasterServiceImpl implements MasterService {
 
 	@Autowired
 	private OtpVerificationRepo otpVerificationRepo;
+
+	@Autowired
+	private BookdetailsRepo bookdetailsRepo;
 
 	@Override
 	public boolean isStateNamePresent(String stateName) {
@@ -155,6 +161,22 @@ public class MasterServiceImpl implements MasterService {
 
 		}
 		return otpVerification;
+	}
+
+	@Override
+	public void saveBookDetails(BookDetails bookDetails) {
+		bookdetailsRepo.save(bookDetails);
+	}
+
+	@Override
+	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
+		return  bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
+//		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
+	}
+
+	@Override
+	public void deleteBookDetailsData(BookDetails details) {
+		bookdetailsRepo.delete(details);
 	}
 
 }

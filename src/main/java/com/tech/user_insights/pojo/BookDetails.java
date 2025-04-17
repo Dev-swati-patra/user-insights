@@ -1,6 +1,5 @@
 package com.tech.user_insights.pojo;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -19,8 +18,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDetails {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
@@ -29,13 +29,13 @@ public class BookDetails {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(nullable = false)
+    private Double price;
 
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(nullable = false)
+    @Column(length = 100)
     private String category;
 
     @Column(columnDefinition = "TEXT")
@@ -47,7 +47,11 @@ public class BookDetails {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+//    @PrePersist
+//    public void prePersist() {
+//        this.createdAt = LocalDateTime.now();
+//    }
 }

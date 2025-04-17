@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,15 +21,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartItem {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cart_user"))
+	@JoinColumn(name = "user_id")
 	private UserInfo user;
 
 	@ManyToOne
-	@JoinColumn(name = "book_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cart_book"))
+	@JoinColumn(name = "book_id")
 	private BookDetails book;
 
 	@Column(nullable = false)

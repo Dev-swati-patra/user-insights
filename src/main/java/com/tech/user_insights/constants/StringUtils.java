@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
+import com.tech.user_insights.responsedto.ErrorResponseDto;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -56,5 +58,22 @@ public class StringUtils {
 			builder.append(random.nextInt(10));
 		}
 		return builder.toString();
+	}
+
+	public static ErrorResponseDto setErrorResponse(ServiceCode serviceCode) {
+
+		ErrorResponseDto dto = new ErrorResponseDto();
+		dto.setErrorCode(serviceCode.getCode());
+		dto.setErrorDesc(serviceCode.getMessage());
+		return dto;
+
+	}
+	public static ErrorResponseDto setErrorResponse(BookServiceCode bookServiceCode) {
+
+		ErrorResponseDto dto = new ErrorResponseDto();
+		dto.setErrorCode(bookServiceCode.getCode());
+		dto.setErrorDesc(bookServiceCode.getMessage());
+		return dto;
+
 	}
 }
