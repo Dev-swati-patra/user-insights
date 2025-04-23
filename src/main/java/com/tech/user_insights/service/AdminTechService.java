@@ -11,4 +11,6 @@ public interface AdminTechService {
 
 	ResponseDto modifyBooks_V1_0(BookDetailsDto bookDetailsDto);
 
+	ResponseDto viewDetails_V1_0(BookDetailsDto bookDetailsDto);
+
 }
