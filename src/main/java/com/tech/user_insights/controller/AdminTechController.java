@@ -55,8 +55,16 @@ public class AdminTechController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
-
-
 	}
 
+	@PostMapping("/viewDetails/V1.0")
+	public ResponseEntity<ResponseDto> viewDetails_V1_0(@RequestBody BookDetailsDto bookDetailsDto) {
+		ResponseDto dto = new ResponseDto();
+		try {
+			dto = adminTechService.viewDetails_V1_0(bookDetailsDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
+	}
 }

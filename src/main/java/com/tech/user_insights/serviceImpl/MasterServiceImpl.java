@@ -170,13 +170,18 @@ public class MasterServiceImpl implements MasterService {
 
 	@Override
 	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
-		return  bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
+		return bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
 //		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
 	}
 
 	@Override
 	public void deleteBookDetailsData(BookDetails details) {
 		bookdetailsRepo.delete(details);
+	}
+
+	@Override
+	public BookDetails viewBookDetailsData(BookDetails details) {
+		return bookdetailsRepo.findByAuthorAndTitle(details.getAuthor(), details.getTitle());
 	}
 
 }

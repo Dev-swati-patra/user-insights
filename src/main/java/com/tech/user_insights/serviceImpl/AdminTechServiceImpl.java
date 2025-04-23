@@ -67,12 +67,10 @@ public class AdminTechServiceImpl implements AdminTechService {
 				if (StringUtils.isValidObj(details)) {
 					masterService.deleteBookDetailsData(details);
 					responseDto.setStatus("SUCCESS");
-
 				} else {
 					responseDto.setStatus("FAIL");
 					responseDto.setListErrResponse(List.of(new ErrorResponseDto(BookServiceCode.SVC012.getCode(),
 							BookServiceCode.SVC012.getMessage())));
-
 				}
 
 			} else {
@@ -103,17 +101,40 @@ public class AdminTechServiceImpl implements AdminTechService {
 				details.setDescription(bookDetailsDto.getDescription());
 				masterService.saveBookDetails(details);
 				dto.setStatus("SUCCESS");
-
 			} else {
 				dto.setStatus("FAIL");
 				dto.setListErrResponse(List.of(
 						new ErrorResponseDto(BookServiceCode.SVC013.getCode(), BookServiceCode.SVC013.getMessage())));
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return dto;
+	}
+
+	@Override
+	public ResponseDto viewDetails_V1_0(BookDetailsDto bookDetailsDto) {
+		ResponseDto responseDto = new ResponseDto();
+		try {
+			if (!StringUtils.isEmpty(bookDetailsDto.getAuthor()) && !StringUtils.isEmpty(bookDetailsDto.getTitle())) {
+				BookDetails details = masterService.getDataByAuthorAndTitle(bookDetailsDto);
+				if (StringUtils.isValidObj(details)) {
+					BookDetails bookDetailsData = masterService.viewBookDetailsData(details);
+					responseDto.setStatus("SUCCESS");
+//					responseDto.setListErrResponse("");
+				} else {
+					responseDto.setStatus("FAIL");
+					responseDto.setListErrResponse(List.of(new ErrorResponseDto(BookServiceCode.SVC012.getCode(),
+							BookServiceCode.SVC012.getMessage())));
+
+				}
+			}
+
+		} catch (Exception e) {
+
+		}
+
+		return null;
 	}
 
 }

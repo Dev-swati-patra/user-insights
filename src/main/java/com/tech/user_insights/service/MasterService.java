@@ -50,5 +50,7 @@ public interface MasterService {
 
 	void deleteBookDetailsData(BookDetails details);
 
+	BookDetails viewBookDetailsData(BookDetails details);
+
 
 }
