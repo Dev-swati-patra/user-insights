@@ -1,4 +1,11 @@
-//package com.tech.user_insights.serviceImpl;
+package com.tech.user_insights.serviceImpl;
+
+import org.springframework.stereotype.Service;
+
+import com.tech.user_insights.dto.BookDetailsDto;
+import com.tech.user_insights.responsedto.ResponseDto;
+import com.tech.user_insights.service.AdminTechService;
+
 //
 //import java.util.List;
 //
@@ -15,8 +22,32 @@
 //import com.tech.user_insights.service.MasterService;
 //import com.tech.user_insights.validations.RecordValidation;
 //
-//@Service
-//public class AdminTechServiceImpl implements AdminTechService {
+@Service
+public class AdminTechServiceImpl implements AdminTechService {
+
+	@Override
+	public ResponseDto addBooks_V1_0(BookDetailsDto bookDetailsDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseDto deleteBooks_v1_0(BookDetailsDto bookDetailsDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseDto modifyBooks_V1_0(BookDetailsDto bookDetailsDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseDto viewDetails_V1_0(BookDetailsDto bookDetailsDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 //
 //	@Autowired
 //	private RecordValidation recordValidation;
@@ -137,4 +168,4 @@
 //		return null;
 //	}
 //
-//}
+}

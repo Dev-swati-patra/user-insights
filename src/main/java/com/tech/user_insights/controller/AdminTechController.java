@@ -7,25 +7,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-<<<<<<< Updated upstream
 import com.tech.user_insights.dto.BookDetailsDto;
 import com.tech.user_insights.responsedto.ResponseDto;
 import com.tech.user_insights.service.AdminTechService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-=======
->>>>>>> Stashed changes
 @RestController
 @RequestMapping("/admin")
 public class AdminTechController {
 
-<<<<<<< Updated upstream
 	@Autowired
 	private AdminTechService adminTechService;
 
-=======
->>>>>>> Stashed changes
 	@PostMapping("/addBooks/V1.0")
 	public ResponseEntity<ResponseDto> addBooks_V1_0(@RequestBody BookDetailsDto bookDetailsDto) {
 		ResponseDto responseDto = new ResponseDto();
