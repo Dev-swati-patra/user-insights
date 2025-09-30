@@ -12,11 +12,9 @@ import com.tech.user_insights.responsedto.ResponseDto;
 import com.tech.user_insights.service.AdminTechService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/admin")
-@Slf4j
 public class AdminTechController {
 
 	@Autowired

@@ -5,14 +5,12 @@ import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.BookDetailsDto;
-import com.tech.user_insights.pojo.BookDetails;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
 import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.StateDetails;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
-import com.tech.user_insights.repo.BookdetailsRepo;
 import com.tech.user_insights.repo.CountryDetailsRepo;
 import com.tech.user_insights.repo.DistrictDetailsRepo;
 import com.tech.user_insights.repo.OtpVerificationRepo;
@@ -45,8 +43,8 @@ public class MasterServiceImpl implements MasterService {
 	@Autowired
 	private OtpVerificationRepo otpVerificationRepo;
 
-	@Autowired
-	private BookdetailsRepo bookdetailsRepo;
+//	@Autowired
+//	private BookdetailsRepo bookdetailsRepo;
 
 	@Override
 	public boolean isStateNamePresent(String stateName) {
@@ -102,28 +100,30 @@ public class MasterServiceImpl implements MasterService {
 		return countryDetails.getCountryShortName();
 	}
 
-	@Override
-	public boolean isValidDistrictName(String districtName, String stateName) {
-		if (isDistrictNamePresent(districtName)) {
-			return districtDetailsRepo.findByDistrictName(districtName).getStateCode() == getStateCode(stateName);
-		}
-		return false;
-	}
-
-	@Override
-	public boolean isValidStateName(String stateName, String countryName) {
-
-		if (isStateNamePresent(stateName)) {
-			return stateDetailsrepo.findByStateName(stateName).getCountryCode() == getCountryCode(countryName);
-		}
-		return false;
-	}
-
-	@Override
-	public boolean isValidCountryName(String countryName) {
-		CountryDetails countryDetails = countryDetailsRepo.findByCountryName(countryName);
-		return null != countryDetails.getCountryName();
-	}
+//	@Override
+//	public boolean isValidDistrictName(String districtName, String stateName) {
+//		if (isDistrictNamePresent(districtName)) {
+//			return districtDetailsRepo.findByDistrictName(districtName).getState()
+//					.getStateCode() == getStateCode(stateName);
+//		}
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean isValidStateName(String stateName, String countryName) {
+//
+//		if (isStateNamePresent(stateName)) {
+//			return stateDetailsrepo.findByStateName(stateName).getCountry()
+//					.getCountryCode() == getCountryCode(countryName);
+//		}
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean isValidCountryName(String countryName) {
+//		CountryDetails countryDetails = countryDetailsRepo.findByCountryName(countryName);
+//		return null != countryDetails.getCountryName();
+//	}
 
 	@Override
 	public UserInfo getDataByUserName(String userName) {
@@ -163,25 +163,25 @@ public class MasterServiceImpl implements MasterService {
 		return otpVerification;
 	}
 
-	@Override
-	public void saveBookDetails(BookDetails bookDetails) {
-		bookdetailsRepo.save(bookDetails);
-	}
-
-	@Override
-	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
-		return bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
-//		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
-	}
-
-	@Override
-	public void deleteBookDetailsData(BookDetails details) {
-		bookdetailsRepo.delete(details);
-	}
-
-	@Override
-	public BookDetails viewBookDetailsData(BookDetails details) {
-		return bookdetailsRepo.findByAuthorAndTitle(details.getAuthor(), details.getTitle());
-	}
+//	@Override
+//	public void saveBookDetails(BookDetails bookDetails) {
+//		bookdetailsRepo.save(bookDetails);
+//	}
+//
+//	@Override
+//	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
+//		return bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
+////		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
+//	}
+//
+//	@Override
+//	public void deleteBookDetailsData(BookDetails details) {
+//		bookdetailsRepo.delete(details);
+//	}
+//
+//	@Override
+//	public BookDetails viewBookDetailsData(BookDetails details) {
+//		return bookdetailsRepo.findByAuthorAndTitle(details.getAuthor(), details.getTitle());
+//	}
 
 }

@@ -45,22 +45,24 @@ public class ValidationUserInfo {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC008));
 
 		}
-		if (StringUtils.isEmpty(infoDto.getDistrictName())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC010));
-
-		} else if (!masterService.isValidDistrictName(infoDto.getDistrictName(), infoDto.getStateName())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC010));
-		}
-		if (StringUtils.isEmpty(infoDto.getStateName())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC012));
-		} else if (!masterService.isValidStateName(infoDto.getStateName(), infoDto.getCountryName())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC013));
-		}
-		if (StringUtils.isEmpty(infoDto.getCountryName())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC014));
-		} else if (!masterService.isValidCountryName(infoDto.getCountryName())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC015));
-		}
+//		if (StringUtils.isEmpty(infoDto.getDistrictName())) {
+//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC010));
+//
+//		} 
+//		else if (!masterService.isValidDistrictName(infoDto.getDistrictName(), infoDto.getStateName())) {
+//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC010));
+//		}
+//		if (StringUtils.isEmpty(infoDto.getStateName())) {
+//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC012));
+//		}
+//		else if (!masterService.isValidStateName(infoDto.getStateName(), infoDto.getCountryName())) {
+//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC013));
+//		}
+//		if (StringUtils.isEmpty(infoDto.getCountryName())) {
+//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC014));
+//		} else if (!masterService.isValidCountryName(infoDto.getCountryName())) {
+//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC015));
+//		}
 
 		if (StringUtils.isEmpty(infoDto.getUserAddress())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC016));
