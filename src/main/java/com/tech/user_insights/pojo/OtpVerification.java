@@ -1,6 +1,5 @@
 package com.tech.user_insights.pojo;
 
-
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -14,7 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "otp_verification")
+@Table(schema = "core", name = "otp_verification")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

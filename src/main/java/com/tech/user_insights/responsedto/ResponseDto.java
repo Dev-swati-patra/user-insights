@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseDto {
 	private String status;
+	private BookingManagementResponseDto bookingManagementResponseDto;
 	List<ErrorResponseDto> listErrResponse;
 
 }

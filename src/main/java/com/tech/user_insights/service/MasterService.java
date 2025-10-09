@@ -1,6 +1,10 @@
 package com.tech.user_insights.service;
 
+import java.util.List;
+
+import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.OtpVerification;
+import com.tech.user_insights.pojo.SpotDetails;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 
@@ -26,11 +30,13 @@ public interface MasterService {
 
 	String getCountryShortName(String countryName);
 
-//	boolean isValidCountryName(String countryName);
+	boolean isValidCountryName(String countryName);
+
 //
-//	boolean isValidDistrictName(String districtName, String stateName);
+	boolean isValidDistrictName(String districtName, String stateName);
+
 //
-//	boolean isValidStateName(String stateName, String countryName);
+	boolean isValidStateName(String stateName, String countryName);
 
 	void saveUserInfoDetails(UserInfo userInfo);
 
@@ -42,6 +48,16 @@ public interface MasterService {
 
 	OtpVerification getOtpVerificationData(String userName);
 
+	void saveSpotDetails(SpotDetails spotDetails);
+
+	List<SpotDetails> fetchAllSpot();
+
+	SpotDetails getDataBySpotName(String spotName);
+
+	void saveBookingManagementDetails(BookingManagement bookingManagement);
+
+	BookingManagement getBookManagementDataByUserId(Integer userId);
+
 //	void saveBookDetails(BookDetails bookDetails);
 //
 //	BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto);
@@ -49,6 +65,5 @@ public interface MasterService {
 //	void deleteBookDetailsData(BookDetails details);
 //
 //	BookDetails viewBookDetailsData(BookDetails details);
-
 
 }

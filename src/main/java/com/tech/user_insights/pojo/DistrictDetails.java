@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "district_details")
+@Table(schema = "core",name = "district_details")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

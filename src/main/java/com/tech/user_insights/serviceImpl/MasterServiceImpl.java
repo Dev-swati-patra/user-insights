@@ -1,48 +1,51 @@
 package com.tech.user_insights.serviceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.StringUtils;
-import com.tech.user_insights.dto.BookDetailsDto;
+import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
 import com.tech.user_insights.pojo.OtpVerification;
+import com.tech.user_insights.pojo.SpotDetails;
 import com.tech.user_insights.pojo.StateDetails;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
+import com.tech.user_insights.repo.BookingManagementRepo;
 import com.tech.user_insights.repo.CountryDetailsRepo;
 import com.tech.user_insights.repo.DistrictDetailsRepo;
 import com.tech.user_insights.repo.OtpVerificationRepo;
+import com.tech.user_insights.repo.SpotDetailsRepo;
 import com.tech.user_insights.repo.StateDetailsrepo;
 import com.tech.user_insights.repo.UserInfoRepo;
 import com.tech.user_insights.repo.UserLoginInfoRepo;
 import com.tech.user_insights.service.MasterService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MasterServiceImpl implements MasterService {
 
-	@Autowired
-	private UserInfoRepo infoRepo;
+	private final UserInfoRepo infoRepo;
 
-	@Autowired
-	private UserLoginInfoRepo loginInfoRepo;
+	private final UserLoginInfoRepo loginInfoRepo;
 
-	@Autowired
-	private DistrictDetailsRepo districtDetailsRepo;
+	private final DistrictDetailsRepo districtDetailsRepo;
 
-	@Autowired
-	private StateDetailsrepo stateDetailsrepo;
+	private final StateDetailsrepo stateDetailsrepo;
 
-	@Autowired
-	private CountryDetailsRepo countryDetailsRepo;
+	private final CountryDetailsRepo countryDetailsRepo;
 
-	@Autowired
-	private OtpVerificationRepo otpVerificationRepo;
+	private final OtpVerificationRepo otpVerificationRepo;
 
+	private final SpotDetailsRepo spotDetailsRepo;
+
+	private final BookingManagementRepo bookingManagementRepo;
 //	@Autowired
 //	private BookdetailsRepo bookdetailsRepo;
 
@@ -100,30 +103,30 @@ public class MasterServiceImpl implements MasterService {
 		return countryDetails.getCountryShortName();
 	}
 
-//	@Override
-//	public boolean isValidDistrictName(String districtName, String stateName) {
-//		if (isDistrictNamePresent(districtName)) {
-//			return districtDetailsRepo.findByDistrictName(districtName).getState()
-//					.getStateCode() == getStateCode(stateName);
-//		}
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean isValidStateName(String stateName, String countryName) {
-//
-//		if (isStateNamePresent(stateName)) {
-//			return stateDetailsrepo.findByStateName(stateName).getCountry()
-//					.getCountryCode() == getCountryCode(countryName);
-//		}
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean isValidCountryName(String countryName) {
-//		CountryDetails countryDetails = countryDetailsRepo.findByCountryName(countryName);
-//		return null != countryDetails.getCountryName();
-//	}
+	@Override
+	public boolean isValidDistrictName(String districtName, String stateName) {
+		if (isDistrictNamePresent(districtName)) {
+			return districtDetailsRepo.findByDistrictName(districtName).getState()
+					.getStateCode() == getStateCode(stateName);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isValidStateName(String stateName, String countryName) {
+
+		if (isStateNamePresent(stateName)) {
+			return stateDetailsrepo.findByStateName(stateName).getCountry()
+					.getCountryCode() == getCountryCode(countryName);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isValidCountryName(String countryName) {
+		CountryDetails countryDetails = countryDetailsRepo.findByCountryName(countryName);
+		return null != countryDetails.getCountryName();
+	}
 
 	@Override
 	public UserInfo getDataByUserName(String userName) {
@@ -161,6 +164,32 @@ public class MasterServiceImpl implements MasterService {
 
 		}
 		return otpVerification;
+	}
+
+	@Override
+	public void saveSpotDetails(SpotDetails spotDetails) {
+		spotDetailsRepo.save(spotDetails);
+	}
+
+	@Override
+	public List<SpotDetails> fetchAllSpot() {
+		return spotDetailsRepo.findAll();
+	}
+
+	@Override
+	public SpotDetails getDataBySpotName(String spotName) {
+		return spotDetailsRepo.findBySpotName(spotName);
+	}
+
+	@Override
+	public void saveBookingManagementDetails(BookingManagement bookingManagement) {
+		bookingManagementRepo.save(bookingManagement);
+	}
+
+	@Override
+	public BookingManagement getBookManagementDataByUserId(Integer userId) {
+		bookingManagementRepo.findByUserId(userId);
+		return null;
 	}
 
 //	@Override
