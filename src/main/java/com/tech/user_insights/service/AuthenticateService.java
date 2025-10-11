@@ -21,4 +21,8 @@ public interface AuthenticateService {
 
 	ResponseDto resetPassword_v1_0(ChangePasswordRequest passwordRequest);
 
+	ResponseDto updateUserprofile_V1_0(UserInfoDto userInfoDto);
+
+	ResponseDto deleteUser_V1_0(UserInfoDto userInfoDto);
+
 }
