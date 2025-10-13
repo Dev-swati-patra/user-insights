@@ -22,68 +22,68 @@ public class ValidationUserInfo {
 	public List<ErrorResponseDto> validateUserInfoData(UserInfoDto infoDto) {
 		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
 
-		if (StringUtils.isEmpty(infoDto.getUserName())) {
+		if (StringUtils.isEmpty(infoDto.userName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC002));
 
-		} else if (null != masterService.getDataByUserName(infoDto.getUserName())) {
+		} else if (null != masterService.getDataByUserName(infoDto.userName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC003));
 		}
 
-		if (StringUtils.isEmpty(infoDto.getUserEmail())) {
+		if (StringUtils.isEmpty(infoDto.userEmail())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC004));
 
-		} else if (!infoDto.getUserEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
+		} else if (!infoDto.userEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC005));
 		}
 
-		if (StringUtils.isEmpty(infoDto.getUserPassword())) {
+		if (StringUtils.isEmpty(infoDto.userPassword())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC006));
 
-		} else if (!passwordValidate(infoDto.getUserPassword())) {
+		} else if (!passwordValidate(infoDto.userPassword())) {
 
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC007));
 		}
-		if (StringUtils.isEmpty(infoDto.getFullName())) {
+		if (StringUtils.isEmpty(infoDto.fullName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC008));
 
 		}
-		if (StringUtils.isEmpty(infoDto.getDistrictName())) {
+		if (StringUtils.isEmpty(infoDto.districtName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC010));
 
-		} else if (!masterService.isValidDistrictName(infoDto.getDistrictName(), infoDto.getStateName())) {
+		} else if (!masterService.isValidDistrictName(infoDto.districtName(), infoDto.stateName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC011));
 		}
-		if (StringUtils.isEmpty(infoDto.getStateName())) {
+		if (StringUtils.isEmpty(infoDto.stateName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC012));
-		} else if (!masterService.isValidStateName(infoDto.getStateName(), infoDto.getCountryName())) {
+		} else if (!masterService.isValidStateName(infoDto.stateName(), infoDto.countryName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC013));
 		}
-		if (StringUtils.isEmpty(infoDto.getCountryName())) {
+		if (StringUtils.isEmpty(infoDto.countryName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC014));
-		} else if (!masterService.isValidCountryName(infoDto.getCountryName())) {
+		} else if (!masterService.isValidCountryName(infoDto.countryName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC015));
 		}
 
-		if (StringUtils.isEmpty(infoDto.getUserAddress())) {
+		if (StringUtils.isEmpty(infoDto.userAddress())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC016));
-		} else if (StringUtils.matchPattern("", infoDto.getUserAddress())) {
+		} else if (StringUtils.matchPattern("", infoDto.userAddress())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC017));
 		}
-		if (!StringUtils.isValidMobile(infoDto.getUserPhoneNumber())) {
+		if (!StringUtils.isValidMobile(infoDto.userPhoneNumber())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC019));
 		}
-		if (StringUtils.isEmpty(infoDto.getUserAge())) {
+		if (StringUtils.isEmpty(infoDto.userAge())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC018));
 		}
-		if (StringUtils.isEmpty(infoDto.getUserPancard()) && StringUtils.isEmpty(infoDto.getUserPassport())
-				&& StringUtils.isEmpty(infoDto.getUserAadhar())) {
+		if (StringUtils.isEmpty(infoDto.userPancard()) && StringUtils.isEmpty(infoDto.userPassport())
+				&& StringUtils.isEmpty(infoDto.userAadhar())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC020));
-		} else if (!StringUtils.isEmpty(infoDto.getUserPancard())) {
-			if (!infoDto.getUserPancard().matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
+		} else if (!StringUtils.isEmpty(infoDto.userPancard())) {
+			if (!infoDto.userPancard().matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC021));
 			}
-		} else if (!StringUtils.isEmpty(infoDto.getUserAadhar())) {
-			if (!infoDto.getUserAadhar().matches("\\d{12}")) {
+		} else if (!StringUtils.isEmpty(infoDto.userAadhar())) {
+			if (!infoDto.userAadhar().matches("\\d{12}")) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC022));
 			}
 
@@ -107,47 +107,47 @@ public class ValidationUserInfo {
 
 	public List<ErrorResponseDto> validateUpdateUserprofileData(UserInfoDto userInfoDto) {
 		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
-		if (!StringUtils.isEmpty(userInfoDto.getUserEmail())) {
-			if (!userInfoDto.getUserEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
+		if (!StringUtils.isEmpty(userInfoDto.userEmail())) {
+			if (!userInfoDto.userEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC005));
 			}
 		}
-		if (!StringUtils.isEmpty(userInfoDto.getUserPassword())) {
-			if (!passwordValidate(userInfoDto.getUserPassword())) {
+		if (!StringUtils.isEmpty(userInfoDto.userPassword())) {
+			if (!passwordValidate(userInfoDto.userPassword())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC007));
 			}
 		}
-		if (!StringUtils.isEmpty(userInfoDto.getCountryName())) {
-			if (!masterService.isValidCountryName(userInfoDto.getCountryName())) {
+		if (!StringUtils.isEmpty(userInfoDto.countryName())) {
+			if (!masterService.isValidCountryName(userInfoDto.countryName())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC015));
 			}
 		}
-		if (!StringUtils.isEmpty(userInfoDto.getStateName())) {
-			if (StringUtils.isEmpty(userInfoDto.getCountryName())) {
+		if (!StringUtils.isEmpty(userInfoDto.stateName())) {
+			if (StringUtils.isEmpty(userInfoDto.countryName())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC014));
-			} else if (!masterService.isValidStateName(userInfoDto.getStateName(), userInfoDto.getCountryName())) {
+			} else if (!masterService.isValidStateName(userInfoDto.stateName(), userInfoDto.countryName())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC013));
 			}
 		}
-		if (!StringUtils.isEmpty(userInfoDto.getDistrictName())) {
-			if (StringUtils.isEmpty(userInfoDto.getStateName())) {
+		if (!StringUtils.isEmpty(userInfoDto.districtName())) {
+			if (StringUtils.isEmpty(userInfoDto.stateName())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC012));
-			} else if (!masterService.isValidDistrictName(userInfoDto.getDistrictName(), userInfoDto.getStateName())) {
+			} else if (!masterService.isValidDistrictName(userInfoDto.districtName(), userInfoDto.stateName())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC011));
 			}
 		}
-		if (!StringUtils.isEmpty(userInfoDto.getUserAddress())) {
-			if (!StringUtils.matchPattern("^[A-Z][a-z]*$", userInfoDto.getUserAddress())) {
+		if (!StringUtils.isEmpty(userInfoDto.userAddress())) {
+			if (!StringUtils.matchPattern("^[A-Z][a-z]*$", userInfoDto.userAddress())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC017));
 			}
 		}
-		if (!StringUtils.isEmpty(userInfoDto.getUserPancard())) {
-			if (!userInfoDto.getUserPancard().matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
+		if (!StringUtils.isEmpty(userInfoDto.userPancard())) {
+			if (!userInfoDto.userPancard().matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC021));
 			}
 		}
-		if (!StringUtils.isEmpty(userInfoDto.getUserAadhar())) {
-			if (!userInfoDto.getUserAadhar().matches("\\d{12}")) {
+		if (!StringUtils.isEmpty(userInfoDto.userAadhar())) {
+			if (!userInfoDto.userAadhar().matches("\\d{12}")) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC022));
 			}
 
@@ -160,6 +160,9 @@ public class ValidationUserInfo {
 		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
 		if (StringUtils.isEmpty(spotDetailsDto.getSpotName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC030));
+		} else if (null != masterService.getDataBySpotName(spotDetailsDto.getSpotName())) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC036));
+
 		}
 		if (StringUtils.isEmpty(spotDetailsDto.getCityName())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC032));

@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.ServiceCode;
+import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.SpotDetailsDto;
 import com.tech.user_insights.pojo.SpotDetails;
@@ -41,10 +42,19 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 				spotDetails.setSpotDistrict(spotDetailsDto.getDistrictName());
 				spotDetails.setSpotState(spotDetailsDto.getStateName());
 				spotDetails.setSpotCountry(spotDetailsDto.getCountryName());
-				spotDetails.setIsActive(true);
+//				spotDetails.setIsActive(spotDetailsDto.getIsActive());
+				spotDetails.setPricePerPerson(spotDetailsDto.getPricePerPerson());
+				spotDetails.setOpeningTime(spotDetailsDto.getOpeningTime());
+				spotDetails.setClosingTime(spotDetailsDto.getClosingTime());
+				spotDetails.setContactNumber(spotDetailsDto.getContactNumber());
+				spotDetails.setEmail(spotDetailsDto.getEmail());
+				spotDetails.setImages(spotDetailsDto.getImages());
+				spotDetails.setAverageRating(spotDetailsDto.getAverageRating());
+				spotDetails.setStatus(StatusMessage.ACTIVE);
+				spotDetails.setCreatedAt(spotDetailsDto.getCreatedAt());
+				spotDetails.setUpdatedAt(spotDetailsDto.getUpdatedAt());
 				masterService.saveSpotDetails(spotDetails);
 				dto.setStatus("SUCCESS");
-
 			} else {
 				dto.setStatus("Fail");
 				dto.setListErrResponse(errorResponseList);
@@ -63,7 +73,10 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 		List<SpotDetails> list = masterService.fetchAllSpot();
 		List<SpotDetailsDto> allSpotL = list.stream()
 				.map(spot -> new SpotDetailsDto(spot.getSpotName(), spot.getSpotCity(), spot.getSpotDistrict(),
-						spot.getSpotState(), spot.getSpotCountry(), spot.getIsActive()))
+						spot.getSpotState(), spot.getSpotCountry(), spot.getIsActive(), spot.getPricePerPerson(),
+						spot.getOpeningTime(), spot.getClosingTime(), spot.getContactNumber(), spot.getEmail(),
+						spot.getImages(), spot.getAverageRating(), StatusMessage.ACTIVE.toString(), spot.getCreatedAt(),
+						spot.getUpdatedAt()))
 				.collect(Collectors.toList());
 		return allSpotL;
 	}

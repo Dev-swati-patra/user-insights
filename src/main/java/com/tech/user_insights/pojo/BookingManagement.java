@@ -35,26 +35,26 @@ public class BookingManagement {
 	private UserInfo userInfo;
 
 	@ManyToOne
-	@JoinColumn(name = "spot_id", nullable = false)
+	@JoinColumn(name = "spot_id")
 	private SpotDetails spotDetails;
 
-	@Column(name = "booking_date", nullable = false)
+	@Column(name = "booking_date")
 	private LocalDateTime bookingDate;
 
-	@Column(name = "visit_date", nullable = false)
+	@Column(name = "visit_date")
 	private LocalDateTime visitDate;
 
-	@Column(name = "number_of_people", nullable = false)
+	@Column(name = "number_of_people")
 	private Integer numberOfPeople;
 
-	@Column(name = "total_amount", nullable = false)
+	@Column(name = "total_amount")
 	private BigDecimal totalAmount;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "payment_status", length = 20)
+	@Column(name = "payment_status")
 	private BookingStatus paymentStatus;
 
-	@Column(name = "created_at", updatable = false)
+	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	@Column(name = "updated_at")
@@ -64,7 +64,7 @@ public class BookingManagement {
 	private String remarks;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "booking_status", length = 20, nullable = false)
+	@Column(name = "booking_status")
 	private BookingStatus bookingStatus;
 
 }
