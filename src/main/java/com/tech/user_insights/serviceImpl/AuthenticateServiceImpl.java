@@ -77,7 +77,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			userInfo.setIsActive(true);
 			masterService.saveUserInfoDetails(userInfo);
 			responseDto.setStatus("SUCCESS");
-
 		} else {
 			responseDto.setStatus("Fail");
 			responseDto.setListErrResponse(errResData);
