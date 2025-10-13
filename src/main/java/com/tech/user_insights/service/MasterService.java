@@ -6,6 +6,7 @@ import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.SpotDetails;
+import com.tech.user_insights.pojo.UserAgencyInfo;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 
@@ -60,6 +61,8 @@ public interface MasterService {
 	List<BookingManagement> getBookManagementDataByUserId(Integer userId);
 
 	BookingManagement getBookingDetailsById(Long bookingId);
+
+	void saveUserAgencyInfoDetails(UserAgencyInfo userAgencyInfo);
 
 //	void saveBookDetails(BookDetails bookDetails);
 //

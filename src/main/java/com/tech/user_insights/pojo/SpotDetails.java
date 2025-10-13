@@ -1,8 +1,8 @@
 package com.tech.user_insights.pojo;
 
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.tech.user_insights.constants.StatusMessage;
@@ -56,10 +56,10 @@ public class SpotDetails {
 	private BigDecimal pricePerPerson;
 
 	@Column(name = "opening_time")
-	private String openingTime;
+	private LocalTime openingTime;
 
 	@Column(name = "closing_time")
-	private String closingTime;
+	private LocalTime closingTime;
 
 	@Column(name = "contact_number")
 	private String contactNumber;

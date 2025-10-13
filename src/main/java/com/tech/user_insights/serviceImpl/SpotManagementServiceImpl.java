@@ -1,5 +1,6 @@
 package com.tech.user_insights.serviceImpl;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,8 +45,10 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 				spotDetails.setSpotCountry(spotDetailsDto.getSpotCountry());
 				spotDetails.setIsActive(true);
 				spotDetails.setPricePerPerson(spotDetailsDto.getPricePerPerson());
-				spotDetails.setOpeningTime(spotDetailsDto.getOpeningTime());
-				spotDetails.setClosingTime(spotDetailsDto.getClosingTime());
+//				spotDetails.setOpeningTime(spotDetailsDto.getOpeningTime());
+//				spotDetails.setClosingTime(spotDetailsDto.getClosingTime());
+				spotDetails.setOpeningTime(LocalTime.parse(spotDetailsDto.getOpeningTime()));
+				spotDetails.setClosingTime(LocalTime.parse(spotDetailsDto.getClosingTime()));
 				spotDetails.setContactNumber(spotDetailsDto.getContactNumber());
 				spotDetails.setEmail(spotDetailsDto.getEmail());
 				spotDetails.setImages(spotDetailsDto.getImages());
@@ -66,16 +69,26 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 		return dto;
 	}
 
+//	@Override
+//	public List<SpotDetailsDto> fetchAllSpot_V1_0() {
+//		List<SpotDetails> list = masterService.fetchAllSpot(StatusMessage.ACTIVE);
+//		List<SpotDetailsDto> allSpotL = list.stream()
+//				.map(spot -> new SpotDetailsDto(spot.getSpotName(), spot.getSpotCity(), spot.getSpotDistrict(),
+//						spot.getSpotState(), spot.getSpotCountry(), spot.getPricePerPerson(),
+//						spot.getOpeningTime().toString(), spot.getClosingTime().toString(), spot.getContactNumber(),
+//						spot.getEmail(), spot.getImages(), spot.getAverageRating(), spot.getStatus().toString()))
+//				.collect(Collectors.toList());
+//		return allSpotL;
+//	}
+	
 	@Override
 	public List<SpotDetailsDto> fetchAllSpot_V1_0() {
 		List<SpotDetails> list = masterService.fetchAllSpot(StatusMessage.ACTIVE);
 		List<SpotDetailsDto> allSpotL = list.stream()
-				.map(spot -> new SpotDetailsDto(spot.getSpotName(), spot.getSpotCity(), spot.getSpotDistrict(),
-						spot.getSpotState(), spot.getSpotCountry(), spot.getPricePerPerson(), spot.getOpeningTime(),
-						spot.getClosingTime(), spot.getContactNumber(), spot.getEmail(), spot.getImages(),
-						spot.getAverageRating(), spot.getStatus().toString()))
+				.map(spot -> modelMapper.map(spot, SpotDetailsDto.class))
 				.collect(Collectors.toList());
 		return allSpotL;
+		
 	}
 
 	@Override

@@ -91,15 +91,6 @@ public class ValidationUserInfo {
 		return errorRespnse;
 	}
 
-//	private ErrorResponseDto setErrorResponse(ServiceCode serviceCode) {
-//
-//		ErrorResponseDto dto = new ErrorResponseDto();
-//		dto.setErrorCode(serviceCode.getCode());
-//		dto.setErrorDesc(serviceCode.getMessage());
-//		return dto;
-//
-//	}
-
 	public boolean passwordValidate(String password) {
 		return password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 
@@ -182,7 +173,17 @@ public class ValidationUserInfo {
 		if (StringUtils.isEmpty(spotDetailsDto.getSpotCountry())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC014));
 		} else if (!masterService.isValidCountryName(spotDetailsDto.getSpotCountry())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC015));
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC041));
+		}
+		if (StringUtils.isEmpty(spotDetailsDto.getOpeningTime())) {
+
+		} else if (StringUtils.matchPattern("^([01]\\d|2[0-3]):[0-5]\\d$", spotDetailsDto.getOpeningTime())) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC040));
+		}
+		if (StringUtils.isEmpty(spotDetailsDto.getClosingTime())) {
+
+		} else if (StringUtils.matchPattern("^([01]\\d|2[0-3]):[0-5]\\d$", spotDetailsDto.getClosingTime())) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC040));
 		}
 		return errorRespnse;
 	}

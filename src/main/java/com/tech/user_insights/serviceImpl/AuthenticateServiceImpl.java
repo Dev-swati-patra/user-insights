@@ -21,6 +21,7 @@ import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.pojo.OtpVerification;
+import com.tech.user_insights.pojo.UserAgencyInfo;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 import com.tech.user_insights.responsedto.ErrorResponseDto;
@@ -42,48 +43,105 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticateServiceImpl implements AuthenticateService {
 
 	private final UserService userService;
-
 	private final PasswordEncoder passwordEncoder;
-
 	private final ValidationUserInfo validationUserInfo;
-
 	private final MasterService masterService;
-
 	private final AuthenticationManager authenticationManager;
-
 	private final JwtService jwtService;
 
 	@Override
 	public ResponseDto register_V1_0(UserInfoDto userInfoDto) {
 		ResponseDto responseDto = new ResponseDto();
-		UserInfo userInfo = null;
+
 		List<ErrorResponseDto> errResData = validationUserInfo.validateUserInfoData(userInfoDto);
-		if (errResData.isEmpty()) {
-			userInfo = new UserInfo();
+		if (!errResData.isEmpty()) {
+			responseDto.setStatus("Fail");
+			responseDto.setListErrResponse(errResData);
+			return responseDto;
+		}
+
+		String encodedPassword = passwordEncoder.encode(userInfoDto.userPassword());
+		Integer countryCode = masterService.getCountryCode(userInfoDto.countryName());
+		Integer stateCode = masterService.getStateCode(userInfoDto.stateName());
+		Integer districtCode = masterService.getDistrictCode(userInfoDto.districtName());
+		long phoneNumber = Long.parseLong(userInfoDto.userPhoneNumber());
+
+		if (Role.AGENCY.name().equalsIgnoreCase(userInfoDto.userRole())) {
+			UserAgencyInfo userAgencyInfo = UserAgencyInfo.builder().userName(userInfoDto.userName())
+					.userEmail(userInfoDto.userEmail()).userPassword(encodedPassword)
+					.userFullName(userInfoDto.fullName()).userCountryCode(countryCode).userStateCode(stateCode)
+					.userDistrictCode(districtCode).userAddress(userInfoDto.userAddress()).userPhoneNumber(phoneNumber)
+					.isActive(true).userRole(Role.AGENCY).build();
+			masterService.saveUserAgencyInfoDetails(userAgencyInfo);
+		} else {
+			UserInfo userInfo = new UserInfo();
 			userInfo.setUserName(userInfoDto.userName());
 			userInfo.setUserEmail(userInfoDto.userEmail());
-			userInfo.setUserPassword(passwordEncoder.encode(userInfoDto.userPassword()));
+			userInfo.setUserPassword(encodedPassword);
 			userInfo.setName(userInfoDto.fullName());
-			userInfo.setUserCountryCode(masterService.getCountryCode(userInfoDto.countryName()));
-			userInfo.setUserStateCode(masterService.getStateCode(userInfoDto.stateName()));
-			userInfo.setUserDistrictCode(masterService.getDistrictCode(userInfoDto.districtName()));
+			userInfo.setUserCountryCode(countryCode);
+			userInfo.setUserStateCode(stateCode);
+			userInfo.setUserDistrictCode(districtCode);
 			userInfo.setUserAddress(userInfoDto.userAddress());
 			userInfo.setUserPancard(userInfoDto.userPancard());
 			userInfo.setUserPassport(userInfoDto.userPassport());
 			userInfo.setUserAadhar(userInfoDto.userAadhar());
-			userInfo.setUserPhoneNumber(Long.parseLong(userInfoDto.userPhoneNumber()));
+			userInfo.setUserPhoneNumber(phoneNumber);
 			userInfo.setUserAge(Integer.parseInt(userInfoDto.userAge()));
 			userInfo.setUserRole(Role.USER);
 			userInfo.setIsActive(true);
 			masterService.saveUserInfoDetails(userInfo);
-			responseDto.setStatus("SUCCESS");
-		} else {
-			responseDto.setStatus("Fail");
-			responseDto.setListErrResponse(errResData);
 		}
-		return responseDto;
 
+		responseDto.setStatus("SUCCESS");
+		return responseDto;
 	}
+
+//	public ResponseDto register_V1_0(UserInfoDto userInfoDto) {
+//		ResponseDto responseDto = new ResponseDto();
+//		UserInfo userInfo = null;
+//		UserAgencyInfo userAgencyInfo = null;
+//		List<ErrorResponseDto> errResData = validationUserInfo.validateUserInfoData(userInfoDto);
+//		if (errResData.isEmpty()) {
+//			if (userInfoDto.userRole() != null && userInfoDto.userRole().equalsIgnoreCase(Role.AGENCY.name())) {
+//				userAgencyInfo = UserAgencyInfo.builder().userName(userInfoDto.userName())
+//						.userEmail(userInfoDto.userEmail())
+//						.userPassword(passwordEncoder.encode(userInfoDto.userPassword()))
+//						.userFullName(userInfoDto.fullName())
+//						.userCountryCode(masterService.getCountryCode(userInfoDto.countryName()))
+//						.userStateCode(masterService.getStateCode(userInfoDto.stateName()))
+//						.userDistrictCode(masterService.getDistrictCode(userInfoDto.districtName()))
+//						.userAddress(userInfoDto.userAddress())
+//						.userPhoneNumber(Long.parseLong(userInfoDto.userPhoneNumber())).isActive(true)
+//						.userRole(Role.AGENCY).build();
+//				masterService.saveUserAgencyInfoDetails(userAgencyInfo);
+//			} else {
+//				userInfo = new UserInfo();
+//				userInfo.setUserName(userInfoDto.userName());
+//				userInfo.setUserEmail(userInfoDto.userEmail());
+//				userInfo.setUserPassword(passwordEncoder.encode(userInfoDto.userPassword()));
+//				userInfo.setName(userInfoDto.fullName());
+//				userInfo.setUserCountryCode(masterService.getCountryCode(userInfoDto.countryName()));
+//				userInfo.setUserStateCode(masterService.getStateCode(userInfoDto.stateName()));
+//				userInfo.setUserDistrictCode(masterService.getDistrictCode(userInfoDto.districtName()));
+//				userInfo.setUserAddress(userInfoDto.userAddress());
+//				userInfo.setUserPancard(userInfoDto.userPancard());
+//				userInfo.setUserPassport(userInfoDto.userPassport());
+//				userInfo.setUserAadhar(userInfoDto.userAadhar());
+//				userInfo.setUserPhoneNumber(Long.parseLong(userInfoDto.userPhoneNumber()));
+//				userInfo.setUserAge(Integer.parseInt(userInfoDto.userAge()));
+//				userInfo.setUserRole(Role.USER);
+//				userInfo.setIsActive(true);
+//				masterService.saveUserInfoDetails(userInfo);
+//			}
+//			responseDto.setStatus("SUCCESS");
+//		} else {
+//			responseDto.setStatus("Fail");
+//			responseDto.setListErrResponse(errResData);
+//		}
+//		return responseDto;
+//
+//	}
 
 	@Override
 	public String signIn_V1_0(UserLoginInfoDto infoDto, HttpServletRequest request) {
@@ -273,23 +331,20 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					userInfo.setUserPassword(
 							StringUtils.isEmpty(userInfoDto.userPassword()) ? userInfo.getUserPassword()
 									: passwordEncoder.encode(userInfoDto.userPassword()));
-					userInfo.setName(StringUtils.isEmpty(userInfoDto.fullName()) ? userInfo.getName()
-							: userInfoDto.fullName());
+					userInfo.setName(
+							StringUtils.isEmpty(userInfoDto.fullName()) ? userInfo.getName() : userInfoDto.fullName());
 					userInfo.setUserCountryCode(
 							StringUtils.isEmpty(userInfoDto.countryName()) ? userInfo.getUserCountryCode()
 									: masterService.getCountryCode(userInfoDto.countryName()));
-					userInfo.setUserStateCode(
-							StringUtils.isEmpty(userInfoDto.stateName()) ? userInfo.getUserStateCode()
-									: masterService.getStateCode(userInfoDto.stateName()));
+					userInfo.setUserStateCode(StringUtils.isEmpty(userInfoDto.stateName()) ? userInfo.getUserStateCode()
+							: masterService.getStateCode(userInfoDto.stateName()));
 					userInfo.setUserDistrictCode(
 							StringUtils.isEmpty(userInfoDto.districtName()) ? userInfo.getUserDistrictCode()
 									: masterService.getDistrictCode(userInfoDto.districtName()));
-					userInfo.setUserAddress(
-							StringUtils.isEmpty(userInfoDto.userAddress()) ? userInfo.getUserAddress()
-									: userInfoDto.userAddress());
-					userInfo.setUserPancard(
-							StringUtils.isEmpty(userInfoDto.userPancard()) ? userInfo.getUserPancard()
-									: userInfoDto.userPancard());
+					userInfo.setUserAddress(StringUtils.isEmpty(userInfoDto.userAddress()) ? userInfo.getUserAddress()
+							: userInfoDto.userAddress());
+					userInfo.setUserPancard(StringUtils.isEmpty(userInfoDto.userPancard()) ? userInfo.getUserPancard()
+							: userInfoDto.userPancard());
 					userInfo.setUserPassport(
 							StringUtils.isEmpty(userInfoDto.userPassport()) ? userInfo.getUserPassport()
 									: userInfoDto.userPassport());
@@ -344,6 +399,11 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
 		}
 		return responseDto;
+	}
+
+	@Override
+	public ResponseDto adminApproved_V1_0(UserInfoDto userInfoDto) {
+		return null;
 	}
 
 }

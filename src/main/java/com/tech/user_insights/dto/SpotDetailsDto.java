@@ -1,8 +1,6 @@
 package com.tech.user_insights.dto;
 
 import java.math.BigDecimal;
-import java.sql.Time;
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
