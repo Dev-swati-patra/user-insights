@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SpotDetailsDto {
 	private String spotName;
-    private String cityName;
-    private String districtName;
-    private String stateName;
-    private String countryName;
+    private String spotCity;
+    private String spotDistrict;
+    private String spotState;
+    private String spotCountry;
     private BigDecimal pricePerPerson;
-    private Time openingTime;
-    private Time closingTime;
+    private String openingTime;
+    private String closingTime;
     private String contactNumber;
     private String email;
     private String images;

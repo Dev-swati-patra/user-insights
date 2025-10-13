@@ -38,10 +38,10 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 			if (errorResponseList.isEmpty()) {
 				spotDetails = new SpotDetails();
 				spotDetails.setSpotName(spotDetailsDto.getSpotName());
-				spotDetails.setSpotCity(spotDetailsDto.getCityName());
-				spotDetails.setSpotDistrict(spotDetailsDto.getDistrictName());
-				spotDetails.setSpotState(spotDetailsDto.getStateName());
-				spotDetails.setSpotCountry(spotDetailsDto.getCountryName());
+				spotDetails.setSpotCity(spotDetailsDto.getSpotCity());
+				spotDetails.setSpotDistrict(spotDetailsDto.getSpotDistrict());
+				spotDetails.setSpotState(spotDetailsDto.getSpotState());
+				spotDetails.setSpotCountry(spotDetailsDto.getSpotCountry());
 				spotDetails.setIsActive(true);
 				spotDetails.setPricePerPerson(spotDetailsDto.getPricePerPerson());
 				spotDetails.setOpeningTime(spotDetailsDto.getOpeningTime());
@@ -98,18 +98,17 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 				List<ErrorResponseDto> errResData = validationUserInfo.validateUpdateSpotData(spotDetailsDto);
 				if (errResData.isEmpty()) {
 					spotDetails
-							.setSpotCity(StringUtils.isEmpty(spotDetailsDto.getCityName()) ? spotDetails.getSpotCity()
-									: spotDetailsDto.getCityName());
+							.setSpotCity(StringUtils.isEmpty(spotDetailsDto.getSpotCity()) ? spotDetails.getSpotCity()
+									: spotDetailsDto.getSpotCity());
 					spotDetails.setSpotDistrict(
-							StringUtils.isEmpty(spotDetailsDto.getDistrictName()) ? spotDetails.getSpotDistrict()
-									: spotDetailsDto.getDistrictName());
+							StringUtils.isEmpty(spotDetailsDto.getSpotDistrict()) ? spotDetails.getSpotDistrict()
+									: spotDetailsDto.getSpotDistrict());
 					spotDetails.setSpotState(
-							StringUtils.isEmpty(spotDetailsDto.getStateName()) ? spotDetails.getSpotState()
-									: spotDetailsDto.getStateName());
+							StringUtils.isEmpty(spotDetailsDto.getSpotState()) ? spotDetails.getSpotState()
+									: spotDetailsDto.getSpotState());
 					spotDetails.setSpotCountry(
-							StringUtils.isEmpty(spotDetailsDto.getCountryName()) ? spotDetails.getSpotCountry()
-									: spotDetailsDto.getCountryName());
-					spotDetails.setIsActive(true);
+							StringUtils.isEmpty(spotDetailsDto.getSpotCountry()) ? spotDetails.getSpotCountry()
+									: spotDetailsDto.getSpotCountry());
 					masterService.saveSpotDetails(spotDetails);
 					response.setStatus("SUCCESS");
 				} else {
@@ -140,8 +139,8 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 			spotDetails = masterService.getDataBySpotName(spotDetailsDto.getSpotName());
 			if (StringUtils.isValidObj(spotDetails)) {
 				spotDetails.setIsActive(false);
-				responseDto.setStatus("SUCCESS");
 				masterService.saveSpotDetails(spotDetails);
+				responseDto.setStatus("SUCCESS");
 			} else {
 				responseDto.setStatus("FAIL");
 				responseDto.setListErrResponse(

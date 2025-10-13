@@ -11,6 +11,8 @@ import com.tech.user_insights.pojo.UserLoginInfo;
 
 public interface MasterService {
 
+	String getUserName();
+
 	UserInfo getDataByUserName(String userName);
 
 	boolean isStateNamePresent(String stateName);
@@ -33,10 +35,8 @@ public interface MasterService {
 
 	boolean isValidCountryName(String countryName);
 
-//
 	boolean isValidDistrictName(String districtName, String stateName);
 
-//
 	boolean isValidStateName(String stateName, String countryName);
 
 	void saveUserInfoDetails(UserInfo userInfo);
@@ -57,7 +57,9 @@ public interface MasterService {
 
 	void saveBookingManagementDetails(BookingManagement bookingManagement);
 
-	BookingManagement getBookManagementDataByUserId(Integer userId);
+	List<BookingManagement> getBookManagementDataByUserId(Integer userId);
+
+	BookingManagement getBookingDetailsById(Long bookingId);
 
 //	void saveBookDetails(BookDetails bookDetails);
 //
