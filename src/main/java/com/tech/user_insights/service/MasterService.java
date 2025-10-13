@@ -2,6 +2,7 @@ package com.tech.user_insights.service;
 
 import java.util.List;
 
+import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.SpotDetails;
@@ -50,7 +51,7 @@ public interface MasterService {
 
 	void saveSpotDetails(SpotDetails spotDetails);
 
-	List<SpotDetails> fetchAllSpot();
+	List<SpotDetails> fetchAllSpot(StatusMessage active);
 
 	SpotDetails getDataBySpotName(String spotName);
 
