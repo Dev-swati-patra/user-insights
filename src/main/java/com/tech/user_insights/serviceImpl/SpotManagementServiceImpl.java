@@ -42,7 +42,7 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 				spotDetails.setSpotDistrict(spotDetailsDto.getDistrictName());
 				spotDetails.setSpotState(spotDetailsDto.getStateName());
 				spotDetails.setSpotCountry(spotDetailsDto.getCountryName());
-//				spotDetails.setIsActive(spotDetailsDto.getIsActive());
+				spotDetails.setIsActive(true);
 				spotDetails.setPricePerPerson(spotDetailsDto.getPricePerPerson());
 				spotDetails.setOpeningTime(spotDetailsDto.getOpeningTime());
 				spotDetails.setClosingTime(spotDetailsDto.getClosingTime());
@@ -51,8 +51,6 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 				spotDetails.setImages(spotDetailsDto.getImages());
 				spotDetails.setAverageRating(spotDetailsDto.getAverageRating());
 				spotDetails.setStatus(StatusMessage.ACTIVE);
-				spotDetails.setCreatedAt(spotDetailsDto.getCreatedAt());
-				spotDetails.setUpdatedAt(spotDetailsDto.getUpdatedAt());
 				masterService.saveSpotDetails(spotDetails);
 				dto.setStatus("SUCCESS");
 			} else {
@@ -70,13 +68,12 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 
 	@Override
 	public List<SpotDetailsDto> fetchAllSpot_V1_0() {
-		List<SpotDetails> list = masterService.fetchAllSpot();
+		List<SpotDetails> list = masterService.fetchAllSpot(StatusMessage.ACTIVE);
 		List<SpotDetailsDto> allSpotL = list.stream()
 				.map(spot -> new SpotDetailsDto(spot.getSpotName(), spot.getSpotCity(), spot.getSpotDistrict(),
-						spot.getSpotState(), spot.getSpotCountry(), spot.getIsActive(), spot.getPricePerPerson(),
-						spot.getOpeningTime(), spot.getClosingTime(), spot.getContactNumber(), spot.getEmail(),
-						spot.getImages(), spot.getAverageRating(), StatusMessage.ACTIVE.toString(), spot.getCreatedAt(),
-						spot.getUpdatedAt()))
+						spot.getSpotState(), spot.getSpotCountry(), spot.getPricePerPerson(), spot.getOpeningTime(),
+						spot.getClosingTime(), spot.getContactNumber(), spot.getEmail(), spot.getImages(),
+						spot.getAverageRating(), spot.getStatus().toString()))
 				.collect(Collectors.toList());
 		return allSpotL;
 	}
