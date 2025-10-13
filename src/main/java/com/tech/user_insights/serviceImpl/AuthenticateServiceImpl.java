@@ -60,19 +60,19 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		List<ErrorResponseDto> errResData = validationUserInfo.validateUserInfoData(userInfoDto);
 		if (errResData.isEmpty()) {
 			userInfo = new UserInfo();
-			userInfo.setUserName(userInfoDto.getUserName());
-			userInfo.setUserEmail(userInfoDto.getUserEmail());
-			userInfo.setUserPassword(passwordEncoder.encode(userInfoDto.getUserPassword()));
-			userInfo.setName(userInfoDto.getFullName());
-			userInfo.setUserCountryCode(masterService.getCountryCode(userInfoDto.getCountryName()));
-			userInfo.setUserStateCode(masterService.getStateCode(userInfoDto.getStateName()));
-			userInfo.setUserDistrictCode(masterService.getDistrictCode(userInfoDto.getDistrictName()));
-			userInfo.setUserAddress(userInfoDto.getUserAddress());
-			userInfo.setUserPancard(userInfoDto.getUserPancard());
-			userInfo.setUserPassport(userInfoDto.getUserPassport());
-			userInfo.setUserAadhar(userInfoDto.getUserAadhar());
-			userInfo.setUserPhoneNumber(Long.parseLong(userInfoDto.getUserPhoneNumber()));
-			userInfo.setUserAge(Integer.parseInt(userInfoDto.getUserAge()));
+			userInfo.setUserName(userInfoDto.userName());
+			userInfo.setUserEmail(userInfoDto.userEmail());
+			userInfo.setUserPassword(passwordEncoder.encode(userInfoDto.userPassword()));
+			userInfo.setName(userInfoDto.fullName());
+			userInfo.setUserCountryCode(masterService.getCountryCode(userInfoDto.countryName()));
+			userInfo.setUserStateCode(masterService.getStateCode(userInfoDto.stateName()));
+			userInfo.setUserDistrictCode(masterService.getDistrictCode(userInfoDto.districtName()));
+			userInfo.setUserAddress(userInfoDto.userAddress());
+			userInfo.setUserPancard(userInfoDto.userPancard());
+			userInfo.setUserPassport(userInfoDto.userPassport());
+			userInfo.setUserAadhar(userInfoDto.userAadhar());
+			userInfo.setUserPhoneNumber(Long.parseLong(userInfoDto.userPhoneNumber()));
+			userInfo.setUserAge(Integer.parseInt(userInfoDto.userAge()));
 			userInfo.setUserRole(Role.USER);
 			userInfo.setIsActive(true);
 			masterService.saveUserInfoDetails(userInfo);
@@ -261,45 +261,45 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	public ResponseDto updateUserprofile_V1_0(UserInfoDto userInfoDto) {
 		ResponseDto responseDto = new ResponseDto();
 		UserInfo userInfo = null;
-		if (!StringUtils.isEmpty(userInfoDto.getUserName())) {
-			userInfo = masterService.getDataByUserName(userInfoDto.getUserName());
+		if (!StringUtils.isEmpty(userInfoDto.userName())) {
+			userInfo = masterService.getDataByUserName(userInfoDto.userName());
 			if (StringUtils.isValidObj(userInfo)) {
 				List<ErrorResponseDto> errResData = validationUserInfo.validateUpdateUserprofileData(userInfoDto);
 				if (errResData.isEmpty()) {
 //					userInfo.setUserName(StringUtils.isEmpty(userInfoDto.getUserName()) ? userInfo.getUserName()
 //							: userInfoDto.getUserName());
-					userInfo.setUserEmail(StringUtils.isEmpty(userInfoDto.getUserEmail()) ? userInfo.getUserEmail()
-							: userInfoDto.getUserEmail());
+					userInfo.setUserEmail(StringUtils.isEmpty(userInfoDto.userEmail()) ? userInfo.getUserEmail()
+							: userInfoDto.userEmail());
 					userInfo.setUserPassword(
-							StringUtils.isEmpty(userInfoDto.getUserPassword()) ? userInfo.getUserPassword()
-									: passwordEncoder.encode(userInfoDto.getUserPassword()));
-					userInfo.setName(StringUtils.isEmpty(userInfoDto.getFullName()) ? userInfo.getName()
-							: userInfoDto.getFullName());
+							StringUtils.isEmpty(userInfoDto.userPassword()) ? userInfo.getUserPassword()
+									: passwordEncoder.encode(userInfoDto.userPassword()));
+					userInfo.setName(StringUtils.isEmpty(userInfoDto.fullName()) ? userInfo.getName()
+							: userInfoDto.fullName());
 					userInfo.setUserCountryCode(
-							StringUtils.isEmpty(userInfoDto.getCountryName()) ? userInfo.getUserCountryCode()
-									: masterService.getCountryCode(userInfoDto.getCountryName()));
+							StringUtils.isEmpty(userInfoDto.countryName()) ? userInfo.getUserCountryCode()
+									: masterService.getCountryCode(userInfoDto.countryName()));
 					userInfo.setUserStateCode(
-							StringUtils.isEmpty(userInfoDto.getStateName()) ? userInfo.getUserStateCode()
-									: masterService.getStateCode(userInfoDto.getStateName()));
+							StringUtils.isEmpty(userInfoDto.stateName()) ? userInfo.getUserStateCode()
+									: masterService.getStateCode(userInfoDto.stateName()));
 					userInfo.setUserDistrictCode(
-							StringUtils.isEmpty(userInfoDto.getDistrictName()) ? userInfo.getUserDistrictCode()
-									: masterService.getDistrictCode(userInfoDto.getDistrictName()));
+							StringUtils.isEmpty(userInfoDto.districtName()) ? userInfo.getUserDistrictCode()
+									: masterService.getDistrictCode(userInfoDto.districtName()));
 					userInfo.setUserAddress(
-							StringUtils.isEmpty(userInfoDto.getUserAddress()) ? userInfo.getUserAddress()
-									: userInfoDto.getUserAddress());
+							StringUtils.isEmpty(userInfoDto.userAddress()) ? userInfo.getUserAddress()
+									: userInfoDto.userAddress());
 					userInfo.setUserPancard(
-							StringUtils.isEmpty(userInfoDto.getUserPancard()) ? userInfo.getUserPancard()
-									: userInfoDto.getUserPancard());
+							StringUtils.isEmpty(userInfoDto.userPancard()) ? userInfo.getUserPancard()
+									: userInfoDto.userPancard());
 					userInfo.setUserPassport(
-							StringUtils.isEmpty(userInfoDto.getUserPassport()) ? userInfo.getUserPassport()
-									: userInfoDto.getUserPassport());
-					userInfo.setUserAadhar(StringUtils.isEmpty(userInfoDto.getUserAadhar()) ? userInfo.getUserAadhar()
-							: userInfoDto.getUserAadhar());
+							StringUtils.isEmpty(userInfoDto.userPassport()) ? userInfo.getUserPassport()
+									: userInfoDto.userPassport());
+					userInfo.setUserAadhar(StringUtils.isEmpty(userInfoDto.userAadhar()) ? userInfo.getUserAadhar()
+							: userInfoDto.userAadhar());
 					userInfo.setUserPhoneNumber(
-							StringUtils.isEmpty(userInfoDto.getUserPhoneNumber()) ? userInfo.getUserPhoneNumber()
-									: Long.parseLong(userInfoDto.getUserPhoneNumber()));
-					userInfo.setUserAge(StringUtils.isEmpty(userInfoDto.getUserAge()) ? userInfo.getUserAge()
-							: Integer.parseInt(userInfoDto.getUserAge()));
+							StringUtils.isEmpty(userInfoDto.userPhoneNumber()) ? userInfo.getUserPhoneNumber()
+									: Long.parseLong(userInfoDto.userPhoneNumber()));
+					userInfo.setUserAge(StringUtils.isEmpty(userInfoDto.userAge()) ? userInfo.getUserAge()
+							: Integer.parseInt(userInfoDto.userAge()));
 					userInfo.setUserRole(Role.USER);
 					userInfo.setIsActive(true);
 					masterService.saveUserInfoDetails(userInfo);
@@ -326,8 +326,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	@Override
 	public ResponseDto deleteUser_V1_0(UserInfoDto userInfoDto) {
 		ResponseDto responseDto = new ResponseDto();
-		if (!StringUtils.isEmpty(userInfoDto.getUserName())) {
-			UserInfo userInfo = masterService.getDataByUserName(userInfoDto.getUserName());
+		if (!StringUtils.isEmpty(userInfoDto.userName())) {
+			UserInfo userInfo = masterService.getDataByUserName(userInfoDto.userName());
 			if (StringUtils.isValidObj(userInfo)) {
 				userInfo.setIsActive(false);
 				masterService.saveUserInfoDetails(userInfo);

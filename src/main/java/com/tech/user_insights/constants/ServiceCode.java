@@ -39,6 +39,7 @@ public enum ServiceCode {
 	SVC033("SVC033", "Number of people must not be null or empty."),
 	SVC034("SVC034", "Number of people must be greater than 0."), 
 	SVC035("SVC035", "Visit date must not be null or empty."), 
+	SVC036("SVC036", "Spot name already exist."),
 	SVC100("SVC100", "Unexpected Error!");
 
 	String code;

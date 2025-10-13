@@ -8,6 +8,6 @@ import com.tech.user_insights.pojo.BookingManagement;
 @Repository
 public interface BookingManagementRepo extends JpaRepository<BookingManagement, Long> {
 
-	BookingManagement findByUserId(Integer userId);
+	BookingManagement findByUserInfo_UserId(Integer userId);
 
 }

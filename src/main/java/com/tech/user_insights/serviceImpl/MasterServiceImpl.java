@@ -188,8 +188,7 @@ public class MasterServiceImpl implements MasterService {
 
 	@Override
 	public BookingManagement getBookManagementDataByUserId(Integer userId) {
-		bookingManagementRepo.findByUserId(userId);
-		return null;
+		return bookingManagementRepo.findByUserInfo_UserId(userId);
 	}
 
 //	@Override
