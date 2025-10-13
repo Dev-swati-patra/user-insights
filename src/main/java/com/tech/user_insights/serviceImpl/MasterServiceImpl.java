@@ -1,52 +1,53 @@
 package com.tech.user_insights.serviceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.StringUtils;
-import com.tech.user_insights.dto.BookDetailsDto;
-import com.tech.user_insights.pojo.BookDetails;
+import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.CountryDetails;
 import com.tech.user_insights.pojo.DistrictDetails;
 import com.tech.user_insights.pojo.OtpVerification;
+import com.tech.user_insights.pojo.SpotDetails;
 import com.tech.user_insights.pojo.StateDetails;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
-import com.tech.user_insights.repo.BookdetailsRepo;
+import com.tech.user_insights.repo.BookingManagementRepo;
 import com.tech.user_insights.repo.CountryDetailsRepo;
 import com.tech.user_insights.repo.DistrictDetailsRepo;
 import com.tech.user_insights.repo.OtpVerificationRepo;
+import com.tech.user_insights.repo.SpotDetailsRepo;
 import com.tech.user_insights.repo.StateDetailsrepo;
 import com.tech.user_insights.repo.UserInfoRepo;
 import com.tech.user_insights.repo.UserLoginInfoRepo;
 import com.tech.user_insights.service.MasterService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MasterServiceImpl implements MasterService {
 
-	@Autowired
-	private UserInfoRepo infoRepo;
+	private final UserInfoRepo infoRepo;
 
-	@Autowired
-	private UserLoginInfoRepo loginInfoRepo;
+	private final UserLoginInfoRepo loginInfoRepo;
 
-	@Autowired
-	private DistrictDetailsRepo districtDetailsRepo;
+	private final DistrictDetailsRepo districtDetailsRepo;
 
-	@Autowired
-	private StateDetailsrepo stateDetailsrepo;
+	private final StateDetailsrepo stateDetailsrepo;
 
-	@Autowired
-	private CountryDetailsRepo countryDetailsRepo;
+	private final CountryDetailsRepo countryDetailsRepo;
 
-	@Autowired
-	private OtpVerificationRepo otpVerificationRepo;
+	private final OtpVerificationRepo otpVerificationRepo;
 
-	@Autowired
-	private BookdetailsRepo bookdetailsRepo;
+	private final SpotDetailsRepo spotDetailsRepo;
+
+	private final BookingManagementRepo bookingManagementRepo;
+//	@Autowired
+//	private BookdetailsRepo bookdetailsRepo;
 
 	@Override
 	public boolean isStateNamePresent(String stateName) {
@@ -105,7 +106,8 @@ public class MasterServiceImpl implements MasterService {
 	@Override
 	public boolean isValidDistrictName(String districtName, String stateName) {
 		if (isDistrictNamePresent(districtName)) {
-			return districtDetailsRepo.findByDistrictName(districtName).getStateCode() == getStateCode(stateName);
+			return districtDetailsRepo.findByDistrictName(districtName).getState()
+					.getStateCode() == getStateCode(stateName);
 		}
 		return false;
 	}
@@ -114,7 +116,8 @@ public class MasterServiceImpl implements MasterService {
 	public boolean isValidStateName(String stateName, String countryName) {
 
 		if (isStateNamePresent(stateName)) {
-			return stateDetailsrepo.findByStateName(stateName).getCountryCode() == getCountryCode(countryName);
+			return stateDetailsrepo.findByStateName(stateName).getCountry()
+					.getCountryCode() == getCountryCode(countryName);
 		}
 		return false;
 	}
@@ -164,19 +167,50 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public void saveBookDetails(BookDetails bookDetails) {
-		bookdetailsRepo.save(bookDetails);
+	public void saveSpotDetails(SpotDetails spotDetails) {
+		spotDetailsRepo.save(spotDetails);
 	}
 
 	@Override
-	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
-		return  bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
-//		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
+	public List<SpotDetails> fetchAllSpot() {
+		return spotDetailsRepo.findAll();
 	}
 
 	@Override
-	public void deleteBookDetailsData(BookDetails details) {
-		bookdetailsRepo.delete(details);
+	public SpotDetails getDataBySpotName(String spotName) {
+		return spotDetailsRepo.findBySpotName(spotName);
 	}
+
+	@Override
+	public void saveBookingManagementDetails(BookingManagement bookingManagement) {
+		bookingManagementRepo.save(bookingManagement);
+	}
+
+	@Override
+	public BookingManagement getBookManagementDataByUserId(Integer userId) {
+		bookingManagementRepo.findByUserId(userId);
+		return null;
+	}
+
+//	@Override
+//	public void saveBookDetails(BookDetails bookDetails) {
+//		bookdetailsRepo.save(bookDetails);
+//	}
+//
+//	@Override
+//	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
+//		return bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
+////		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
+//	}
+//
+//	@Override
+//	public void deleteBookDetailsData(BookDetails details) {
+//		bookdetailsRepo.delete(details);
+//	}
+//
+//	@Override
+//	public BookDetails viewBookDetailsData(BookDetails details) {
+//		return bookdetailsRepo.findByAuthorAndTitle(details.getAuthor(), details.getTitle());
+//	}
 
 }

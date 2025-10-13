@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,29 +33,25 @@ import com.tech.user_insights.validations.ValidationUserInfo;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthenticateServiceImpl implements AuthenticateService {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private ValidationUserInfo validationUserInfo;
+	private final ValidationUserInfo validationUserInfo;
 
-	@Autowired
-	private MasterService masterService;
+	private final MasterService masterService;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
 
-	@Autowired
-	private JwtService jwtService;
+	private final JwtService jwtService;
 
 	@Override
 	public ResponseDto register_V1_0(UserInfoDto userInfoDto) {
@@ -82,7 +77,6 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			userInfo.setIsActive(true);
 			masterService.saveUserInfoDetails(userInfo);
 			responseDto.setStatus("SUCCESS");
-
 		} else {
 			responseDto.setStatus("Fail");
 			responseDto.setListErrResponse(errResData);
@@ -261,6 +255,95 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		}
 
 		return dto;
+	}
+
+	@Override
+	public ResponseDto updateUserprofile_V1_0(UserInfoDto userInfoDto) {
+		ResponseDto responseDto = new ResponseDto();
+		UserInfo userInfo = null;
+		if (!StringUtils.isEmpty(userInfoDto.getUserName())) {
+			userInfo = masterService.getDataByUserName(userInfoDto.getUserName());
+			if (StringUtils.isValidObj(userInfo)) {
+				List<ErrorResponseDto> errResData = validationUserInfo.validateUpdateUserprofileData(userInfoDto);
+				if (errResData.isEmpty()) {
+//					userInfo.setUserName(StringUtils.isEmpty(userInfoDto.getUserName()) ? userInfo.getUserName()
+//							: userInfoDto.getUserName());
+					userInfo.setUserEmail(StringUtils.isEmpty(userInfoDto.getUserEmail()) ? userInfo.getUserEmail()
+							: userInfoDto.getUserEmail());
+					userInfo.setUserPassword(
+							StringUtils.isEmpty(userInfoDto.getUserPassword()) ? userInfo.getUserPassword()
+									: passwordEncoder.encode(userInfoDto.getUserPassword()));
+					userInfo.setName(StringUtils.isEmpty(userInfoDto.getFullName()) ? userInfo.getName()
+							: userInfoDto.getFullName());
+					userInfo.setUserCountryCode(
+							StringUtils.isEmpty(userInfoDto.getCountryName()) ? userInfo.getUserCountryCode()
+									: masterService.getCountryCode(userInfoDto.getCountryName()));
+					userInfo.setUserStateCode(
+							StringUtils.isEmpty(userInfoDto.getStateName()) ? userInfo.getUserStateCode()
+									: masterService.getStateCode(userInfoDto.getStateName()));
+					userInfo.setUserDistrictCode(
+							StringUtils.isEmpty(userInfoDto.getDistrictName()) ? userInfo.getUserDistrictCode()
+									: masterService.getDistrictCode(userInfoDto.getDistrictName()));
+					userInfo.setUserAddress(
+							StringUtils.isEmpty(userInfoDto.getUserAddress()) ? userInfo.getUserAddress()
+									: userInfoDto.getUserAddress());
+					userInfo.setUserPancard(
+							StringUtils.isEmpty(userInfoDto.getUserPancard()) ? userInfo.getUserPancard()
+									: userInfoDto.getUserPancard());
+					userInfo.setUserPassport(
+							StringUtils.isEmpty(userInfoDto.getUserPassport()) ? userInfo.getUserPassport()
+									: userInfoDto.getUserPassport());
+					userInfo.setUserAadhar(StringUtils.isEmpty(userInfoDto.getUserAadhar()) ? userInfo.getUserAadhar()
+							: userInfoDto.getUserAadhar());
+					userInfo.setUserPhoneNumber(
+							StringUtils.isEmpty(userInfoDto.getUserPhoneNumber()) ? userInfo.getUserPhoneNumber()
+									: Long.parseLong(userInfoDto.getUserPhoneNumber()));
+					userInfo.setUserAge(StringUtils.isEmpty(userInfoDto.getUserAge()) ? userInfo.getUserAge()
+							: Integer.parseInt(userInfoDto.getUserAge()));
+					userInfo.setUserRole(Role.USER);
+					userInfo.setIsActive(true);
+					masterService.saveUserInfoDetails(userInfo);
+					responseDto.setStatus("SUCCESS");
+				} else {
+					responseDto.setStatus("FAIL");
+					responseDto.setListErrResponse(errResData);
+				}
+
+			} else {
+				responseDto.setStatus("FAIL");
+				responseDto.setListErrResponse(
+						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+			}
+
+		} else {
+			responseDto.setStatus("FAIL");
+			responseDto.setListErrResponse(
+					List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
+		}
+		return responseDto;
+	}
+
+	@Override
+	public ResponseDto deleteUser_V1_0(UserInfoDto userInfoDto) {
+		ResponseDto responseDto = new ResponseDto();
+		if (!StringUtils.isEmpty(userInfoDto.getUserName())) {
+			UserInfo userInfo = masterService.getDataByUserName(userInfoDto.getUserName());
+			if (StringUtils.isValidObj(userInfo)) {
+				userInfo.setIsActive(false);
+				masterService.saveUserInfoDetails(userInfo);
+				responseDto.setStatus("SUCCESS");
+			} else {
+				responseDto.setStatus("FAIL");
+				responseDto.setListErrResponse(
+						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+			}
+
+		} else {
+			responseDto.setStatus("FAIL");
+			responseDto.setListErrResponse(
+					List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
+		}
+		return responseDto;
 	}
 
 }

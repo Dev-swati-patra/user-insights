@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StringUtils {
 
 	public static boolean isValidObj(final Object inObj) {
-		if ((null == inObj)) {
+		if (null == inObj || inObj.toString().trim().length() == 0 || inObj.toString().equalsIgnoreCase("null")) {
 			return false;
 		} else {
 			return true;
@@ -68,6 +68,7 @@ public class StringUtils {
 		return dto;
 
 	}
+
 	public static ErrorResponseDto setErrorResponse(BookServiceCode bookServiceCode) {
 
 		ErrorResponseDto dto = new ErrorResponseDto();

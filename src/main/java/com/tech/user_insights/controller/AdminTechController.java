@@ -12,11 +12,9 @@ import com.tech.user_insights.responsedto.ResponseDto;
 import com.tech.user_insights.service.AdminTechService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/admin")
-@Slf4j
 public class AdminTechController {
 
 	@Autowired
@@ -55,8 +53,16 @@ public class AdminTechController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
-
-
 	}
 
+	@PostMapping("/viewDetails/V1.0")
+	public ResponseEntity<ResponseDto> viewDetails_V1_0(@RequestBody BookDetailsDto bookDetailsDto) {
+		ResponseDto dto = new ResponseDto();
+		try {
+			dto = adminTechService.viewDetails_V1_0(bookDetailsDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
+	}
 }

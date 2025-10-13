@@ -1,8 +1,10 @@
 package com.tech.user_insights.service;
 
-import com.tech.user_insights.dto.BookDetailsDto;
-import com.tech.user_insights.pojo.BookDetails;
+import java.util.List;
+
+import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.OtpVerification;
+import com.tech.user_insights.pojo.SpotDetails;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 
@@ -30,8 +32,10 @@ public interface MasterService {
 
 	boolean isValidCountryName(String countryName);
 
+//
 	boolean isValidDistrictName(String districtName, String stateName);
 
+//
 	boolean isValidStateName(String stateName, String countryName);
 
 	void saveUserInfoDetails(UserInfo userInfo);
@@ -44,11 +48,22 @@ public interface MasterService {
 
 	OtpVerification getOtpVerificationData(String userName);
 
-	void saveBookDetails(BookDetails bookDetails);
+	void saveSpotDetails(SpotDetails spotDetails);
 
-	BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto);
+	List<SpotDetails> fetchAllSpot();
 
-	void deleteBookDetailsData(BookDetails details);
+	SpotDetails getDataBySpotName(String spotName);
 
+	void saveBookingManagementDetails(BookingManagement bookingManagement);
+
+	BookingManagement getBookManagementDataByUserId(Integer userId);
+
+//	void saveBookDetails(BookDetails bookDetails);
+//
+//	BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto);
+//
+//	void deleteBookDetailsData(BookDetails details);
+//
+//	BookDetails viewBookDetailsData(BookDetails details);
 
 }
