@@ -2,8 +2,12 @@ package com.tech.user_insights.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.CountryDetails;
@@ -11,6 +15,7 @@ import com.tech.user_insights.pojo.DistrictDetails;
 import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.SpotDetails;
 import com.tech.user_insights.pojo.StateDetails;
+import com.tech.user_insights.pojo.UserAgencyInfo;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
 import com.tech.user_insights.repo.BookingManagementRepo;
@@ -19,6 +24,7 @@ import com.tech.user_insights.repo.DistrictDetailsRepo;
 import com.tech.user_insights.repo.OtpVerificationRepo;
 import com.tech.user_insights.repo.SpotDetailsRepo;
 import com.tech.user_insights.repo.StateDetailsrepo;
+import com.tech.user_insights.repo.UserAgencyInfoRepo;
 import com.tech.user_insights.repo.UserInfoRepo;
 import com.tech.user_insights.repo.UserLoginInfoRepo;
 import com.tech.user_insights.service.MasterService;
@@ -32,20 +38,14 @@ import lombok.extern.slf4j.Slf4j;
 public class MasterServiceImpl implements MasterService {
 
 	private final UserInfoRepo infoRepo;
-
 	private final UserLoginInfoRepo loginInfoRepo;
-
 	private final DistrictDetailsRepo districtDetailsRepo;
-
 	private final StateDetailsrepo stateDetailsrepo;
-
 	private final CountryDetailsRepo countryDetailsRepo;
-
 	private final OtpVerificationRepo otpVerificationRepo;
-
 	private final SpotDetailsRepo spotDetailsRepo;
-
 	private final BookingManagementRepo bookingManagementRepo;
+	private final UserAgencyInfoRepo userAgencyInfoRepo;
 //	@Autowired
 //	private BookdetailsRepo bookdetailsRepo;
 
@@ -172,8 +172,8 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public List<SpotDetails> fetchAllSpot() {
-		return spotDetailsRepo.findAll();
+	public List<SpotDetails> fetchAllSpot(StatusMessage active) {
+		return spotDetailsRepo.findByStatus(active);
 	}
 
 	@Override
@@ -187,8 +187,33 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public BookingManagement getBookManagementDataByUserId(Integer userId) {
+	public List<BookingManagement> getBookManagementDataByUserId(Integer userId) {
 		return bookingManagementRepo.findByUserInfo_UserId(userId);
+	}
+
+	@Override
+	public String getUserName() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			Object principal = authentication.getPrincipal();
+			if (principal instanceof UserDetails) {
+				return ((UserDetails) principal).getUsername();
+			} else {
+				return principal.toString();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public BookingManagement getBookingDetailsById(Long bookingId) {
+		return bookingManagementRepo.findById(bookingId).get();
+	}
+
+	@Override
+	public void saveUserAgencyInfoDetails(UserAgencyInfo userAgencyInfo) {
+		userAgencyInfoRepo.save(userAgencyInfo);
+
 	}
 
 //	@Override

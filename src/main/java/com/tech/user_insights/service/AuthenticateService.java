@@ -25,4 +25,6 @@ public interface AuthenticateService {
 
 	ResponseDto deleteUser_V1_0(UserInfoDto userInfoDto);
 
+	ResponseDto adminApproved_V1_0(UserInfoDto userInfoDto);
+
 }

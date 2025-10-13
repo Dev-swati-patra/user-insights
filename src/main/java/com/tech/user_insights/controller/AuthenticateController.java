@@ -2,6 +2,7 @@ package com.tech.user_insights.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -122,6 +123,19 @@ public class AuthenticateController {
 		}
 		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
 
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/adminApproved/V1.0")
+	public ResponseEntity<ResponseDto> adminApproved_V1_0(@RequestBody UserInfoDto userInfoDto) {
+		ResponseDto response = new ResponseDto();
+		try {
+			response = authenticateService.adminApproved_V1_0(userInfoDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus("FAIL");
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PostMapping("/logOut/V1.0")
