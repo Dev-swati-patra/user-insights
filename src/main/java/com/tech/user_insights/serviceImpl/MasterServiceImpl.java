@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.CountryDetails;
@@ -172,8 +173,8 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public List<SpotDetails> fetchAllSpot() {
-		return spotDetailsRepo.findAll();
+	public List<SpotDetails> fetchAllSpot(StatusMessage active) {
+		return spotDetailsRepo.findByStatus(active);
 	}
 
 	@Override

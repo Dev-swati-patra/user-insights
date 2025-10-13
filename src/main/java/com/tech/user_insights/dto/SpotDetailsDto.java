@@ -17,7 +17,6 @@ public class SpotDetailsDto {
     private String districtName;
     private String stateName;
     private String countryName;
-    private Boolean isActive;
     private BigDecimal pricePerPerson;
     private Time openingTime;
     private Time closingTime;
@@ -26,6 +25,4 @@ public class SpotDetailsDto {
     private String images;
     private BigDecimal averageRating;
     private String status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

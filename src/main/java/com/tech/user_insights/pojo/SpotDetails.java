@@ -16,6 +16,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -66,8 +68,7 @@ public class SpotDetails {
 	private String email;
 
 	@Column(columnDefinition = "JSON")
-	private String images; // store image URLs as JSON array
-
+	private String images; 
 	@Column(name = "average_rating", precision = 2, scale = 1)
 	private BigDecimal averageRating;
 
@@ -83,5 +84,15 @@ public class SpotDetails {
 
 	@OneToMany(mappedBy = "spotDetails", cascade = CascadeType.ALL)
 	private List<BookingManagement> bookings;
+	
+	@PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }
