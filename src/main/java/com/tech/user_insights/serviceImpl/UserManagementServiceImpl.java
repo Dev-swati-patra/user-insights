@@ -1,8 +1,9 @@
 package com.tech.user_insights.serviceImpl;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -34,8 +35,8 @@ public class UserManagementServiceImpl implements UserManagementService {
 		ResponseDto response = new ResponseDto();
 		BookingManagement bookingManagement = null;
 		List<ErrorResponseDto> errorResponseList = new ArrayList<ErrorResponseDto>();
-		if (!StringUtils.isEmpty(managementDto.getUserName()) && !StringUtils.isEmpty(managementDto.getSpotName())) {
-			UserInfo userInfo = masterService.getDataByUserName(managementDto.getUserName());
+		if (!StringUtils.isEmpty(managementDto.getSpotName())) {
+			UserInfo userInfo = masterService.getDataByUserName(masterService.getUserName());
 			SpotDetails spotDetails = masterService.getDataBySpotName(managementDto.getSpotName());
 			if (StringUtils.isValidObj(userInfo) && StringUtils.isValidObj(spotDetails)) {
 				errorResponseList = validationUserInfo.validateBookManagementDetails(managementDto);
@@ -43,17 +44,15 @@ public class UserManagementServiceImpl implements UserManagementService {
 					bookingManagement = new BookingManagement();
 					bookingManagement.setUserInfo(userInfo);
 					bookingManagement.setSpotDetails(spotDetails);
-					bookingManagement.setBookingDate(null);
+					bookingManagement.setBookingDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 					bookingManagement.setVisitDate(managementDto.getVisitDate());
 					bookingManagement.setNumberOfPeople(managementDto.getNumberOfPeople());
 					BigDecimal total = spotDetails.getPricePerPerson()
 							.multiply(BigDecimal.valueOf(managementDto.getNumberOfPeople()));
 					bookingManagement.setTotalAmount(total);
-					bookingManagement.setBookingStatus(BookingStatus.PENDING);
-					bookingManagement.setCreatedAt(LocalDateTime.now());
+					bookingManagement.setBookingStatus(BookingStatus.BOOKED);
 					bookingManagement.setPaymentStatus(BookingStatus.PENDING);
 					bookingManagement.setRemarks(null);
-					bookingManagement.setUpdatedAt(null);
 					masterService.saveBookingManagementDetails(bookingManagement);
 					response.setStatus("SUCCESS");
 				} else {
@@ -66,7 +65,6 @@ public class UserManagementServiceImpl implements UserManagementService {
 						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage()),
 								new ErrorResponseDto(ServiceCode.SVC031.getCode(), ServiceCode.SVC031.getMessage())));
 			}
-			bookingManagement = new BookingManagement();
 
 		} else {
 			response.setStatus("FAIL");
@@ -81,10 +79,11 @@ public class UserManagementServiceImpl implements UserManagementService {
 	public ResponseDto fetchUserBooking_V1_0(BookingManagementDto managementDto) {
 		ResponseDto response = new ResponseDto();
 		BookingManagementResponseDto dto = null;
-		if (!StringUtils.isEmpty(managementDto.getUserName())) {
-			UserInfo user = masterService.getDataByUserName(managementDto.getUserName());
-			BookingManagement bookManagementData = masterService.getBookManagementDataByUserId(user.getUserId());
-			if (StringUtils.isValidObj(bookManagementData)) {
+		List<BookingManagementResponseDto> bookResponseDtoL = new ArrayList<BookingManagementResponseDto>();
+		if (!StringUtils.isEmpty(masterService.getUserName())) {
+			UserInfo user = masterService.getDataByUserName(masterService.getUserName());
+			List<BookingManagement> bookManagementDataL = masterService.getBookManagementDataByUserId(user.getUserId());
+			for (BookingManagement bookManagementData : bookManagementDataL) {
 				dto = new BookingManagementResponseDto();
 				dto.setUserName(bookManagementData.getUserInfo().getUserName());
 				dto.setSpotName(bookManagementData.getSpotDetails().getSpotName());
@@ -97,13 +96,10 @@ public class UserManagementServiceImpl implements UserManagementService {
 				dto.setUpdatedAt(bookManagementData.getUpdatedAt());
 				dto.setRemarks(bookManagementData.getRemarks());
 				dto.setBookingStatus(bookManagementData.getBookingStatus());
-				response.setBookingManagementResponseDto(dto);
-				response.setStatus("SUCCESS");
-			} else {
-				response.setStatus("FAIL");
-				response.setListErrResponse(
-						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+				bookResponseDtoL.add(dto);
 			}
+			response.setBookingManagementResponseDto(bookResponseDtoL);
+			response.setStatus("SUCCESS");
 
 		} else {
 			response.setStatus("FAIL");
@@ -116,24 +112,30 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Override
 	public ResponseDto cancelBooking_V1_0(BookingManagementDto managementDto) {
 		ResponseDto response = new ResponseDto();
-		if (!StringUtils.isEmpty(managementDto.getUserName())) {
-			UserInfo user = masterService.getDataByUserName(managementDto.getUserName());
-			BookingManagement bookManagementData = masterService.getBookManagementDataByUserId(user.getUserId());
-			if (StringUtils.isValidObj(bookManagementData)) {
-				bookManagementData.setBookingStatus(BookingStatus.CANCELLED);
-				masterService.saveBookingManagementDetails(bookManagementData);
-				response.setStatus("SUCCESS");
+		try {
+			if (null != managementDto && null != managementDto.getBookingId()) {
+				BookingManagement bookingManagement = masterService.getBookingDetailsById(managementDto.getBookingId());
+				if (null != bookingManagement) {
+					bookingManagement.setBookingStatus(BookingStatus.CANCELLED);
+					masterService.saveBookingManagementDetails(bookingManagement);
+					response.setStatus("SUCCESS");
+				} else {
+					response.setStatus("FAIL");
+					response.setListErrResponse(List
+							.of(new ErrorResponseDto(ServiceCode.SVC039.getCode(), ServiceCode.SVC039.getMessage())));
+				}
+
 			} else {
 				response.setStatus("FAIL");
 				response.setListErrResponse(
-						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+						List.of(new ErrorResponseDto(ServiceCode.SVC038.getCode(), ServiceCode.SVC038.getMessage())));
 			}
 
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus("FAIL");
-			response.setListErrResponse(
-					List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
 		}
+
 		return response;
 	}
 

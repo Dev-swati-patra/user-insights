@@ -1,6 +1,7 @@
 package com.tech.user_insights.pojo;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import com.tech.user_insights.constants.BookingStatus;
@@ -14,6 +15,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +42,7 @@ public class BookingManagement {
 	private SpotDetails spotDetails;
 
 	@Column(name = "booking_date")
-	private LocalDateTime bookingDate;
+	private Timestamp bookingDate;
 
 	@Column(name = "visit_date")
 	private LocalDateTime visitDate;
@@ -66,5 +69,15 @@ public class BookingManagement {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "booking_status")
 	private BookingStatus bookingStatus;
+	
+	@PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }
