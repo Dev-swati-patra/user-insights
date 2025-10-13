@@ -56,10 +56,10 @@ public class SpotDetails {
 	private BigDecimal pricePerPerson;
 
 	@Column(name = "opening_time")
-	private Time openingTime;
+	private String openingTime;
 
 	@Column(name = "closing_time")
-	private Time closingTime;
+	private String closingTime;
 
 	@Column(name = "contact_number")
 	private String contactNumber;

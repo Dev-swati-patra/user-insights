@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingManagementDto {
-	private String userName;
+//	private String userName;
 	private String spotName;
 	private LocalDateTime visitDate;
 	private Integer numberOfPeople;
+	private Long bookingId;
 }

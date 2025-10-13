@@ -164,24 +164,24 @@ public class ValidationUserInfo {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC036));
 
 		}
-		if (StringUtils.isEmpty(spotDetailsDto.getCityName())) {
+		if (StringUtils.isEmpty(spotDetailsDto.getSpotCity())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC032));
 		}
 
-		if (StringUtils.isEmpty(spotDetailsDto.getDistrictName())) {
+		if (StringUtils.isEmpty(spotDetailsDto.getSpotDistrict())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC010));
-		} else if (!masterService.isValidDistrictName(spotDetailsDto.getDistrictName(),
-				spotDetailsDto.getStateName())) {
+		} else if (!masterService.isValidDistrictName(spotDetailsDto.getSpotDistrict(),
+				spotDetailsDto.getSpotState())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC011));
 		}
-		if (StringUtils.isEmpty(spotDetailsDto.getStateName())) {
+		if (StringUtils.isEmpty(spotDetailsDto.getSpotState())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC012));
-		} else if (!masterService.isValidStateName(spotDetailsDto.getStateName(), spotDetailsDto.getCountryName())) {
+		} else if (!masterService.isValidStateName(spotDetailsDto.getSpotState(), spotDetailsDto.getSpotCountry())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC013));
 		}
-		if (StringUtils.isEmpty(spotDetailsDto.getCountryName())) {
+		if (StringUtils.isEmpty(spotDetailsDto.getSpotCountry())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC014));
-		} else if (!masterService.isValidCountryName(spotDetailsDto.getCountryName())) {
+		} else if (!masterService.isValidCountryName(spotDetailsDto.getSpotCountry())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC015));
 		}
 		return errorRespnse;
@@ -189,25 +189,25 @@ public class ValidationUserInfo {
 
 	public List<ErrorResponseDto> validateUpdateSpotData(SpotDetailsDto spotDetailsDto) {
 		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
-		if (!StringUtils.isEmpty(spotDetailsDto.getDistrictName())) {
-			if (StringUtils.isEmpty(spotDetailsDto.getStateName())) {
+		if (!StringUtils.isEmpty(spotDetailsDto.getSpotDistrict())) {
+			if (StringUtils.isEmpty(spotDetailsDto.getSpotState())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC012));
-			} else if (!masterService.isValidDistrictName(spotDetailsDto.getDistrictName(),
-					spotDetailsDto.getStateName())) {
+			} else if (!masterService.isValidDistrictName(spotDetailsDto.getSpotDistrict(),
+					spotDetailsDto.getSpotState())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC011));
 			}
 		}
-		if (!StringUtils.isEmpty(spotDetailsDto.getStateName())) {
-			if (StringUtils.isEmpty(spotDetailsDto.getCountryName())) {
+		if (!StringUtils.isEmpty(spotDetailsDto.getSpotState())) {
+			if (StringUtils.isEmpty(spotDetailsDto.getSpotCountry())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC014));
-			} else if (!masterService.isValidStateName(spotDetailsDto.getStateName(),
-					spotDetailsDto.getCountryName())) {
+			} else if (!masterService.isValidStateName(spotDetailsDto.getSpotState(),
+					spotDetailsDto.getSpotCountry())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC013));
 			}
 		}
 
-		if (!StringUtils.isEmpty(spotDetailsDto.getCountryName())) {
-			if (!masterService.isValidCountryName(spotDetailsDto.getCountryName())) {
+		if (!StringUtils.isEmpty(spotDetailsDto.getSpotCountry())) {
+			if (!masterService.isValidCountryName(spotDetailsDto.getSpotCountry())) {
 				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC015));
 			}
 		}
