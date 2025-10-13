@@ -139,4 +139,37 @@ public class UserManagementServiceImpl implements UserManagementService {
 		return response;
 	}
 
+	@Override
+	public ResponseDto updateUserBooking_V1_0(BookingManagementDto managementDto) {
+		ResponseDto response = new ResponseDto();
+		try {
+			if (null != managementDto && null != managementDto.getBookingId()) {
+				BookingManagement bookingManagement = masterService.getBookingDetailsById(managementDto.getBookingId());
+				if (null != bookingManagement) {
+					bookingManagement.setSpotDetails(null);
+					bookingManagement.setNumberOfPeople(managementDto.getNumberOfPeople());
+					bookingManagement.setVisitDate(managementDto.getVisitDate());
+					bookingManagement.setBookingStatus(BookingStatus.BOOKED);
+					masterService.saveBookingManagementDetails(bookingManagement);
+					response.setStatus("SUCCESS");
+				} else {
+					response.setStatus("FAIL");
+					response.setListErrResponse(List
+							.of(new ErrorResponseDto(ServiceCode.SVC039.getCode(), ServiceCode.SVC039.getMessage())));
+				}
+
+			} else {
+				response.setStatus("FAIL");
+				response.setListErrResponse(
+						List.of(new ErrorResponseDto(ServiceCode.SVC038.getCode(), ServiceCode.SVC038.getMessage())));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus("FAIL");
+		}
+
+		return response;
+	}
+
 }
