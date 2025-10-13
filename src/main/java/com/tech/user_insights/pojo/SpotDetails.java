@@ -5,7 +5,7 @@ import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.tech.user_insights.constants.SpotStatus;
+import com.tech.user_insights.constants.StatusMessage;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -73,7 +73,7 @@ public class SpotDetails {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private SpotStatus status;
+	private StatusMessage status;
 
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
