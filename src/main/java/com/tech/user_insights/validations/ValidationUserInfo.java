@@ -241,7 +241,7 @@ public class ValidationUserInfo {
 		List<UserAgencyInfo> userData = masterService.getuserFilterdData(userInfoDto.userName(),
 				userInfoDto.userEmail(), Long.parseLong(userInfoDto.userPhoneNumber()), StatusMessage.UNVERIFIED.name());
 		if (!StringUtils.isEmptyList(userData)) {
-
+			
 		}
 
 //		if (StringUtils.isValidObj(userData)) {
