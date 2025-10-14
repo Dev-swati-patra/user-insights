@@ -7,5 +7,6 @@ import com.tech.user_insights.pojo.UserAgencyInfo;
 
 @Repository
 public interface UserAgencyInfoRepo extends JpaRepository<UserAgencyInfo, Long> {
+	UserAgencyInfo findByUserNameAndApprovalStatus(String userName, String approvalStatus);
 
 }

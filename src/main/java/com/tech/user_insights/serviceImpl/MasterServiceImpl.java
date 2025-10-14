@@ -216,6 +216,11 @@ public class MasterServiceImpl implements MasterService {
 
 	}
 
+	@Override
+	public UserAgencyInfo getUserAgencyInfoDetails(String userName) {
+		return userAgencyInfoRepo.findByUserNameAndApprovalStatus(userName, StatusMessage.UNVERIFIED.name());
+	}
+
 //	@Override
 //	public void saveBookDetails(BookDetails bookDetails) {
 //		bookdetailsRepo.save(bookDetails);

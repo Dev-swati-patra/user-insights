@@ -71,7 +71,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					.userEmail(userInfoDto.userEmail()).userPassword(encodedPassword)
 					.userFullName(userInfoDto.fullName()).userCountryCode(countryCode).userStateCode(stateCode)
 					.userDistrictCode(districtCode).userAddress(userInfoDto.userAddress()).userPhoneNumber(phoneNumber)
-					.isActive(true).userRole(Role.AGENCY).build();
+					.isActive(true).userRole(Role.AGENCY).createdAt(StringUtils.getCurrentTimeStamp()).build();
 			masterService.saveUserAgencyInfoDetails(userAgencyInfo);
 		} else {
 			UserInfo userInfo = new UserInfo();
@@ -403,6 +403,9 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 	@Override
 	public ResponseDto adminApproved_V1_0(UserInfoDto userInfoDto) {
+		if (!StringUtils.isEmpty(userInfoDto.userName())) {
+			UserAgencyInfo userAgencyDetails = masterService.getUserAgencyInfoDetails(userInfoDto.userName());
+		}
 		return null;
 	}
 
