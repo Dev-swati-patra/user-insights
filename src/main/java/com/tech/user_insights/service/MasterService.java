@@ -44,7 +44,7 @@ public interface MasterService {
 
 	void saveUserLoginInfoDetails(UserLoginInfo loginInfo);
 
-	UserInfo getDataByUSerEmail(String userEmail);
+	UserInfo getDataByUserEmail(String userEmail);
 
 	void saveOtpVerificationDetails(OtpVerification otpVerification);
 
@@ -64,14 +64,10 @@ public interface MasterService {
 
 	void saveUserAgencyInfoDetails(UserAgencyInfo userAgencyInfo);
 
-	UserAgencyInfo getUserAgencyInfoDetails(String userName);
+	List<UserAgencyInfo> getUserAgencyInfoDetails(String userName);
 
-//	void saveBookDetails(BookDetails bookDetails);
-//
-//	BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto);
-//
-//	void deleteBookDetailsData(BookDetails details);
-//
-//	BookDetails viewBookDetailsData(BookDetails details);
+	UserInfo getDataByUserPhoneNumber(String userPhoneNumber);
+
+	List<UserAgencyInfo> getuserFilterdData(String userName, String userEmail, long long1, String approvalStatus);
 
 }

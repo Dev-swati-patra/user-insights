@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.tech.user_insights.constants.ClientInfoDetails;
 import com.tech.user_insights.constants.Role;
 import com.tech.user_insights.constants.ServiceCode;
+import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.ChangePasswordRequest;
 import com.tech.user_insights.dto.ForgetPasswordRequest;
@@ -67,32 +68,27 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		long phoneNumber = Long.parseLong(userInfoDto.userPhoneNumber());
 
 		if (Role.AGENCY.name().equalsIgnoreCase(userInfoDto.userRole())) {
+			List<ErrorResponseDto> errorAgencyData = validationUserInfo.valiadteUserAgencyData(userInfoDto);
+			if (!errorAgencyData.isEmpty()) {
+				responseDto.setStatus("Fail");
+				responseDto.setListErrResponse(errResData);
+				return responseDto;
+			}
 			UserAgencyInfo userAgencyInfo = UserAgencyInfo.builder().userName(userInfoDto.userName())
 					.userEmail(userInfoDto.userEmail()).userPassword(encodedPassword)
 					.userFullName(userInfoDto.fullName()).userCountryCode(countryCode).userStateCode(stateCode)
 					.userDistrictCode(districtCode).userAddress(userInfoDto.userAddress()).userPhoneNumber(phoneNumber)
-					.isActive(true).userRole(Role.AGENCY).createdAt(StringUtils.getCurrentTimeStamp()).build();
+					.isActive(true).userRole(Role.AGENCY).approvalStatus(StatusMessage.UNVERIFIED.name())
+					.createdAt(StringUtils.getCurrentTimeStamp()).build();
 			masterService.saveUserAgencyInfoDetails(userAgencyInfo);
 		} else {
-			UserInfo userInfo = new UserInfo();
-			userInfo.setUserName(userInfoDto.userName());
-			userInfo.setUserEmail(userInfoDto.userEmail());
-			userInfo.setUserPassword(encodedPassword);
-			userInfo.setName(userInfoDto.fullName());
-			userInfo.setUserCountryCode(countryCode);
-			userInfo.setUserStateCode(stateCode);
-			userInfo.setUserDistrictCode(districtCode);
-			userInfo.setUserAddress(userInfoDto.userAddress());
-			userInfo.setUserPancard(userInfoDto.userPancard());
-			userInfo.setUserPassport(userInfoDto.userPassport());
-			userInfo.setUserAadhar(userInfoDto.userAadhar());
-			userInfo.setUserPhoneNumber(phoneNumber);
-			userInfo.setUserAge(Integer.parseInt(userInfoDto.userAge()));
-			userInfo.setUserRole(Role.USER);
-			userInfo.setIsActive(true);
+			UserInfo userInfo = UserInfo.builder().userName(userInfoDto.userName()).userEmail(userInfoDto.userEmail())
+					.userPassword(encodedPassword).name(userInfoDto.fullName()).userCountryCode(countryCode)
+					.userStateCode(stateCode).userDistrictCode(districtCode).userAddress(userInfoDto.userAddress())
+					.userPhoneNumber(phoneNumber).userAge(Integer.parseInt(userInfoDto.userAge())).userRole(Role.USER)
+					.isActive(true).build();
 			masterService.saveUserInfoDetails(userInfo);
 		}
-
 		responseDto.setStatus("SUCCESS");
 		return responseDto;
 	}
@@ -343,13 +339,13 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 									: masterService.getDistrictCode(userInfoDto.districtName()));
 					userInfo.setUserAddress(StringUtils.isEmpty(userInfoDto.userAddress()) ? userInfo.getUserAddress()
 							: userInfoDto.userAddress());
-					userInfo.setUserPancard(StringUtils.isEmpty(userInfoDto.userPancard()) ? userInfo.getUserPancard()
-							: userInfoDto.userPancard());
-					userInfo.setUserPassport(
-							StringUtils.isEmpty(userInfoDto.userPassport()) ? userInfo.getUserPassport()
-									: userInfoDto.userPassport());
-					userInfo.setUserAadhar(StringUtils.isEmpty(userInfoDto.userAadhar()) ? userInfo.getUserAadhar()
-							: userInfoDto.userAadhar());
+//					userInfo.setUserPancard(StringUtils.isEmpty(userInfoDto.userPancard()) ? userInfo.getUserPancard()
+//							: userInfoDto.userPancard());
+//					userInfo.setUserPassport(
+//							StringUtils.isEmpty(userInfoDto.userPassport()) ? userInfo.getUserPassport()
+//									: userInfoDto.userPassport());
+//					userInfo.setUserAadhar(StringUtils.isEmpty(userInfoDto.userAadhar()) ? userInfo.getUserAadhar()
+//							: userInfoDto.userAadhar());
 					userInfo.setUserPhoneNumber(
 							StringUtils.isEmpty(userInfoDto.userPhoneNumber()) ? userInfo.getUserPhoneNumber()
 									: Long.parseLong(userInfoDto.userPhoneNumber()));
@@ -404,7 +400,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	@Override
 	public ResponseDto adminApproved_V1_0(UserInfoDto userInfoDto) {
 		if (!StringUtils.isEmpty(userInfoDto.userName())) {
-			UserAgencyInfo userAgencyDetails = masterService.getUserAgencyInfoDetails(userInfoDto.userName());
+//			UserAgencyInfo userAgencyDetails = masterService.getUserAgencyInfoDetails(userInfoDto.userName());
 		}
 		return null;
 	}

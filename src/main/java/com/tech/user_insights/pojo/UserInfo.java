@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserInfo {
 
 	@Id
@@ -50,14 +52,14 @@ public class UserInfo {
 	@Column(name = "user_address")
 	private String userAddress;
 
-	@Column(name = "user_pancard")
-	private String userPancard;
-
-	@Column(name = "user_passport")
-	private String userPassport;
-
-	@Column(name = "user_aadhar")
-	private String userAadhar;
+//	@Column(name = "user_pancard")
+//	private String userPancard;
+//
+//	@Column(name = "user_passport")
+//	private String userPassport;
+//
+//	@Column(name = "user_aadhar")
+//	private String userAadhar;
 
 	@Column(name = "user_phone_number")
 	private Long userPhoneNumber;

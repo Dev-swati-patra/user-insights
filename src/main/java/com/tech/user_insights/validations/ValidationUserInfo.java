@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tech.user_insights.constants.ServiceCode;
+import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.BookingManagementDto;
 import com.tech.user_insights.dto.SpotDetailsDto;
 import com.tech.user_insights.dto.UserInfoDto;
+import com.tech.user_insights.pojo.UserAgencyInfo;
 import com.tech.user_insights.responsedto.ErrorResponseDto;
 import com.tech.user_insights.service.MasterService;
 
@@ -31,6 +33,9 @@ public class ValidationUserInfo {
 
 		if (StringUtils.isEmpty(infoDto.userEmail())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC004));
+
+		} else if (null != masterService.getDataByUserEmail(infoDto.userEmail())) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC042));
 
 		} else if (!infoDto.userEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC005));
@@ -71,23 +76,25 @@ public class ValidationUserInfo {
 		}
 		if (!StringUtils.isValidMobile(infoDto.userPhoneNumber())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC019));
+		} else if (null != masterService.getDataByUserPhoneNumber(infoDto.userPhoneNumber())) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC043));
 		}
 		if (StringUtils.isEmpty(infoDto.userAge())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC018));
 		}
-		if (StringUtils.isEmpty(infoDto.userPancard()) && StringUtils.isEmpty(infoDto.userPassport())
-				&& StringUtils.isEmpty(infoDto.userAadhar())) {
-			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC020));
-		} else if (!StringUtils.isEmpty(infoDto.userPancard())) {
-			if (!infoDto.userPancard().matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
-				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC021));
-			}
-		} else if (!StringUtils.isEmpty(infoDto.userAadhar())) {
-			if (!infoDto.userAadhar().matches("\\d{12}")) {
-				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC022));
-			}
-
-		}
+//		if (StringUtils.isEmpty(infoDto.userPancard()) && StringUtils.isEmpty(infoDto.userPassport())
+//				&& StringUtils.isEmpty(infoDto.userAadhar())) {
+//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC020));
+//		} else if (!StringUtils.isEmpty(infoDto.userPancard())) {
+//			if (!infoDto.userPancard().matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
+//				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC021));
+//			}
+//		} else if (!StringUtils.isEmpty(infoDto.userAadhar())) {
+//			if (!infoDto.userAadhar().matches("\\d{12}")) {
+//				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC022));
+//			}
+//
+//		}
 		return errorRespnse;
 	}
 
@@ -227,6 +234,23 @@ public class ValidationUserInfo {
 		}
 
 		return errorRespnse;
+	}
+
+	public List<ErrorResponseDto> valiadteUserAgencyData(UserInfoDto userInfoDto) {
+		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
+		List<UserAgencyInfo> userData = masterService.getuserFilterdData(userInfoDto.userName(),
+				userInfoDto.userEmail(), Long.parseLong(userInfoDto.userPhoneNumber()), StatusMessage.UNVERIFIED.name());
+		if (!StringUtils.isEmptyList(userData)) {
+
+		}
+
+//		if (StringUtils.isValidObj(userData)) {
+//			if (userData.getIsActive() && "UNVERIFIED".equalsIgnoreCase(userInfoDto.approvalStatus())) {
+//				errorRespnse.add(null);
+//			}
+//		} 
+		return errorRespnse;
+
 	}
 
 }

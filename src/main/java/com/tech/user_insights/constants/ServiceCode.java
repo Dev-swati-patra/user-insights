@@ -44,6 +44,8 @@ public enum ServiceCode {
 	SVC039("SVC039", "Booking Id does not exist."),
 	SVC040("SVC040", "Opening time must be in HH:mm 24-hour format (e.g., 08:00, 22:00)"),
 	SVC041("SVC041", "Opening time and closing time is mandatory."),
+	SVC042("SVC042", "User Email already exists."),
+	SVC043("SVC043", "Phone Number already exists."),
 	SVC100("SVC100", "Unexpected Error!");
 
 	String code;

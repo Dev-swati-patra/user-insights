@@ -1,6 +1,7 @@
 package com.tech.user_insights.constants;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +30,13 @@ public class StringUtils {
 		} else {
 			return false;
 		}
+	}
+
+	public static <T> boolean isEmptyList(final List<T> inObj) {
+		if (null == inObj || inObj.size() == 0) {
+			return true;
+		}
+		return false;
 	}
 
 	public static boolean matchPattern(String regex, String data) {

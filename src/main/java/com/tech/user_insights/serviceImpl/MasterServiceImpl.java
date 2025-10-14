@@ -30,10 +30,8 @@ import com.tech.user_insights.repo.UserLoginInfoRepo;
 import com.tech.user_insights.service.MasterService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class MasterServiceImpl implements MasterService {
 
@@ -46,8 +44,6 @@ public class MasterServiceImpl implements MasterService {
 	private final SpotDetailsRepo spotDetailsRepo;
 	private final BookingManagementRepo bookingManagementRepo;
 	private final UserAgencyInfoRepo userAgencyInfoRepo;
-//	@Autowired
-//	private BookdetailsRepo bookdetailsRepo;
 
 	@Override
 	public boolean isStateNamePresent(String stateName) {
@@ -144,7 +140,7 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public UserInfo getDataByUSerEmail(String userEmail) {
+	public UserInfo getDataByUserEmail(String userEmail) {
 		return infoRepo.findByUserEmail(userEmail);
 	}
 
@@ -217,29 +213,21 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public UserAgencyInfo getUserAgencyInfoDetails(String userName) {
+	public List<UserAgencyInfo> getUserAgencyInfoDetails(String userName) {
 		return userAgencyInfoRepo.findByUserNameAndApprovalStatus(userName, StatusMessage.UNVERIFIED.name());
 	}
 
-//	@Override
-//	public void saveBookDetails(BookDetails bookDetails) {
-//		bookdetailsRepo.save(bookDetails);
-//	}
-//
-//	@Override
-//	public BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto) {
-//		return bookdetailsRepo.findByAuthorAndTitle(bookDetailsDto.getAuthor(), bookDetailsDto.getTitle());
-////		return bookdetailsRepo.findByBookDetails(bookDetailsDto);
-//	}
-//
-//	@Override
-//	public void deleteBookDetailsData(BookDetails details) {
-//		bookdetailsRepo.delete(details);
-//	}
-//
-//	@Override
-//	public BookDetails viewBookDetailsData(BookDetails details) {
-//		return bookdetailsRepo.findByAuthorAndTitle(details.getAuthor(), details.getTitle());
-//	}
+	@Override
+	public UserInfo getDataByUserPhoneNumber(String userPhoneNumber) {
+		return infoRepo.findByUserPhoneNumber(userPhoneNumber);
+	}
+
+	@Override
+	public List<UserAgencyInfo> getuserFilterdData(String userName, String userEmail, long phonNumber,
+			String approvalStatus) {
+		userAgencyInfoRepo.findByUserNameOrUserEmailOrUserPhoneNumberOrApprovalStatus(userName, userEmail, phonNumber,
+				approvalStatus);
+		return null;
+	}
 
 }
