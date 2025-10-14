@@ -11,4 +11,6 @@ public interface UserManagementService {
 
 	ResponseDto cancelBooking_V1_0(BookingManagementDto managementDto);
 
+	ResponseDto updateUserBooking_V1_0(BookingManagementDto managementDto);
+
 }

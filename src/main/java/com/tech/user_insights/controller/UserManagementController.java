@@ -33,6 +33,7 @@ public class UserManagementController {
 		}
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
+
 	@PostMapping("/bookings/fetch/V1.0")
 	public ResponseEntity<ResponseDto> fetchUserBooking_V1_0(@RequestBody BookingManagementDto managementDto) {
 		ResponseDto responseDto = new ResponseDto();
@@ -44,6 +45,19 @@ public class UserManagementController {
 		}
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
+
+	@PostMapping("/bookings/update/V1.0")
+	public ResponseEntity<ResponseDto> updateUserBooking_V1_0(@RequestBody BookingManagementDto managementDto) {
+		ResponseDto responseDto = new ResponseDto();
+		try {
+			responseDto = userManagementService.updateUserBooking_V1_0(managementDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseDto.setStatus("FAIL");
+		}
+		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+	}
+
 	@PostMapping("/bookings/cancel/V1.0")
 	public ResponseEntity<ResponseDto> cancelBooking_V1_0(@RequestBody BookingManagementDto managementDto) {
 		ResponseDto responseDto = new ResponseDto();
@@ -55,6 +69,5 @@ public class UserManagementController {
 		}
 		return new ResponseEntity<>(responseDto, HttpStatus.OK);
 	}
-	
 
 }
