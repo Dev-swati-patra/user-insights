@@ -1,5 +1,7 @@
 package com.tech.user_insights.pojo;
 
+import java.sql.Timestamp;
+
 import com.tech.user_insights.constants.Role;
 
 import jakarta.persistence.Column;
@@ -61,5 +63,14 @@ public class UserAgencyInfo {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "user_role")
 	private Role userRole;
+
+	@Column(name = "approval_status")
+	private String approvalStatus;
+
+	@Column(name = "created_at")
+	private Timestamp createdAt;
+
+	@Column(name = "updated_at")
+	private Timestamp updatedAt;
 
 }

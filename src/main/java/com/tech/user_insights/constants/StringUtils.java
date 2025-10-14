@@ -1,5 +1,6 @@
 package com.tech.user_insights.constants;
 
+import java.sql.Timestamp;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +67,6 @@ public class StringUtils {
 		dto.setErrorCode(serviceCode.getCode());
 		dto.setErrorDesc(serviceCode.getMessage());
 		return dto;
-
 	}
 
 	public static ErrorResponseDto setErrorResponse(BookServiceCode bookServiceCode) {
@@ -75,6 +75,9 @@ public class StringUtils {
 		dto.setErrorCode(bookServiceCode.getCode());
 		dto.setErrorDesc(bookServiceCode.getMessage());
 		return dto;
+	}
 
+	public static Timestamp getCurrentTimeStamp() {
+		return new Timestamp(System.currentTimeMillis());
 	}
 }

@@ -146,7 +146,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 			if (null != managementDto && null != managementDto.getBookingId()) {
 				BookingManagement bookingManagement = masterService.getBookingDetailsById(managementDto.getBookingId());
 				if (null != bookingManagement) {
-					bookingManagement.setSpotDetails(null);
+//					bookingManagement.setSpotDetails(null);
 					bookingManagement.setNumberOfPeople(managementDto.getNumberOfPeople());
 					bookingManagement.setVisitDate(managementDto.getVisitDate());
 					bookingManagement.setBookingStatus(BookingStatus.BOOKED);

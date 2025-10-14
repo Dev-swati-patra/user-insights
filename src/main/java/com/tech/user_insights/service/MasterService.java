@@ -64,6 +64,8 @@ public interface MasterService {
 
 	void saveUserAgencyInfoDetails(UserAgencyInfo userAgencyInfo);
 
+	UserAgencyInfo getUserAgencyInfoDetails(String userName);
+
 //	void saveBookDetails(BookDetails bookDetails);
 //
 //	BookDetails getDataByAuthorAndTitle(BookDetailsDto bookDetailsDto);
