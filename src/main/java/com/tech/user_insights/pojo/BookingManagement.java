@@ -19,6 +19,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class BookingManagement {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,15 +71,15 @@ public class BookingManagement {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "booking_status")
 	private BookingStatus bookingStatus;
-	
-	@PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.updatedAt = LocalDateTime.now();
+	}
 
 }

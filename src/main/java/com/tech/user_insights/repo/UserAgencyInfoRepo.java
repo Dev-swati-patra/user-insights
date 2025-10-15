@@ -14,4 +14,12 @@ public interface UserAgencyInfoRepo extends JpaRepository<UserAgencyInfo, Long> 
 	List<UserAgencyInfo> findByUserNameOrUserEmailOrUserPhoneNumberOrApprovalStatus(String userName, String userEmail,
 			Long userPhoneNumber, String approvalStatus);
 
+	List<UserAgencyInfo> findByUserNameAndApprovalStatusAndIsActive(String userName, String approvalStatus,
+			Boolean isActive);
+
+	List<UserAgencyInfo> findByUserEmailAndApprovalStatusAndIsActive(String userEmail, String approvalStatus,
+			Boolean isActive);
+
+	List<UserAgencyInfo> findByUserPhoneNumberAndApprovalStatusAndIsActive(Long userPhoneNumber, String approvalStatus,
+			Boolean isActive);
 }

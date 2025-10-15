@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.tech.user_insights.constants.ServiceCode;
-import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.BookingManagementDto;
 import com.tech.user_insights.dto.SpotDetailsDto;
 import com.tech.user_insights.dto.UserInfoDto;
-import com.tech.user_insights.pojo.UserAgencyInfo;
 import com.tech.user_insights.responsedto.ErrorResponseDto;
 import com.tech.user_insights.service.MasterService;
 
@@ -238,17 +236,17 @@ public class ValidationUserInfo {
 
 	public List<ErrorResponseDto> valiadteUserAgencyData(UserInfoDto userInfoDto) {
 		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
-		List<UserAgencyInfo> userData = masterService.getuserFilterdData(userInfoDto.userName(),
-				userInfoDto.userEmail(), Long.parseLong(userInfoDto.userPhoneNumber()), StatusMessage.UNVERIFIED.name());
-		if (!StringUtils.isEmptyList(userData)) {
-			
-		}
 
-//		if (StringUtils.isValidObj(userData)) {
-//			if (userData.getIsActive() && "UNVERIFIED".equalsIgnoreCase(userInfoDto.approvalStatus())) {
-//				errorRespnse.add(null);
-//			}
-//		} 
+		if (!StringUtils.isEmptyList(masterService.getUserDataByUserName(userInfoDto.userName()))) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC003));
+		}
+		if (!StringUtils.isEmptyList(masterService.getUserDataByUserEmail(userInfoDto.userName()))) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC042));
+		}
+		if (!StringUtils.isEmptyList(
+				masterService.getUserDataByUserPhoneNumber(Long.parseLong(userInfoDto.userPhoneNumber())))) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC043));
+		}
 		return errorRespnse;
 
 	}

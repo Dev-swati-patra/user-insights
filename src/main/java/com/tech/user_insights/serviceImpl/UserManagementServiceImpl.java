@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tech.user_insights.constants.BookingStatus;
@@ -35,6 +36,16 @@ public class UserManagementServiceImpl implements UserManagementService {
 		ResponseDto response = new ResponseDto();
 		BookingManagement bookingManagement = null;
 		List<ErrorResponseDto> errorResponseList = new ArrayList<ErrorResponseDto>();
+
+		try {
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus("FAIL");
+			response.setListErrResponse(List
+					.of(new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value() + "", "Something went wrong")));
+		}
+
 		if (!StringUtils.isEmpty(managementDto.getSpotName())) {
 			UserInfo userInfo = masterService.getDataByUserName(masterService.getUserName());
 			SpotDetails spotDetails = masterService.getDataBySpotName(managementDto.getSpotName());

@@ -3,12 +3,14 @@ package com.tech.user_insights.service;
 import java.util.List;
 
 import com.tech.user_insights.constants.StatusMessage;
+import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.SpotDetails;
 import com.tech.user_insights.pojo.UserAgencyInfo;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
+import com.tech.user_insights.responsedto.ResponseDto;
 
 public interface MasterService {
 
@@ -48,7 +50,7 @@ public interface MasterService {
 
 	void saveOtpVerificationDetails(OtpVerification otpVerification);
 
-	OtpVerification getOtpVerificationData(String userName);
+//	OtpVerification getOtpVerificationData(String userName);
 
 	void saveSpotDetails(SpotDetails spotDetails);
 
@@ -69,5 +71,17 @@ public interface MasterService {
 	UserInfo getDataByUserPhoneNumber(String userPhoneNumber);
 
 	List<UserAgencyInfo> getuserFilterdData(String userName, String userEmail, long long1, String approvalStatus);
+
+	List<UserAgencyInfo> getUserDataByUserEmail(String userEmail);
+
+	List<UserAgencyInfo> getUserDataByUserPhoneNumber(Long userPhoneNumber);
+
+	List<UserAgencyInfo> getUserDataByUserName(String userName);
+
+	ResponseDto sendOtpToUser(String userName);
+
+	Boolean verifyOtp(UserLoginInfoDto loginInfoDto);
+
+	String generateRandomPassword();
 
 }

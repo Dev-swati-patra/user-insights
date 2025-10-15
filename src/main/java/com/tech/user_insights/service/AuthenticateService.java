@@ -1,7 +1,5 @@
 package com.tech.user_insights.service;
 
-import com.tech.user_insights.dto.ChangePasswordRequest;
-import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.responsedto.ResponseDto;
@@ -13,13 +11,9 @@ public interface AuthenticateService {
 
 	String signIn_V1_0(UserLoginInfoDto infoDto, HttpServletRequest httpServletRequest);
 
-	ResponseDto changePassword_V1_0(ChangePasswordRequest changePasswordRequest);
+	ResponseDto changePassword_V1_0(UserLoginInfoDto changePasswordRequest);
 
-	ResponseDto forgetPassword_V1_0(ForgetPasswordRequest request);
-
-	ResponseDto verify_otp_V1_0(ForgetPasswordRequest request);
-
-	ResponseDto resetPassword_v1_0(ChangePasswordRequest passwordRequest);
+	ResponseDto forgetPassword_V1_0(UserLoginInfoDto request);
 
 	ResponseDto updateUserprofile_V1_0(UserInfoDto userInfoDto);
 
