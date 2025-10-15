@@ -1,7 +1,6 @@
 package com.tech.user_insights.serviceImpl;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,11 +16,8 @@ import com.tech.user_insights.constants.Role;
 import com.tech.user_insights.constants.ServiceCode;
 import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
-import com.tech.user_insights.dto.ChangePasswordRequest;
-import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.dto.UserLoginInfoDto;
-import com.tech.user_insights.pojo.OtpVerification;
 import com.tech.user_insights.pojo.UserAgencyInfo;
 import com.tech.user_insights.pojo.UserInfo;
 import com.tech.user_insights.pojo.UserLoginInfo;
@@ -33,7 +29,6 @@ import com.tech.user_insights.service.AuthenticateService;
 import com.tech.user_insights.service.MasterService;
 import com.tech.user_insights.validations.ValidationUserInfo;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +51,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 		List<ErrorResponseDto> errResData = validationUserInfo.validateUserInfoData(userInfoDto);
 		if (!errResData.isEmpty()) {
-			responseDto.setStatus("Fail");
+			responseDto.setStatus(StatusMessage.FAIL.name());
 			responseDto.setListErrResponse(errResData);
 			return responseDto;
 		}
@@ -70,7 +65,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		if (Role.AGENCY.name().equalsIgnoreCase(userInfoDto.userRole())) {
 			List<ErrorResponseDto> errorAgencyData = validationUserInfo.valiadteUserAgencyData(userInfoDto);
 			if (!errorAgencyData.isEmpty()) {
-				responseDto.setStatus("Fail");
+				responseDto.setStatus(StatusMessage.FAIL.name());
 				responseDto.setListErrResponse(errResData);
 				return responseDto;
 			}
@@ -89,55 +84,9 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					.isActive(true).build();
 			masterService.saveUserInfoDetails(userInfo);
 		}
-		responseDto.setStatus("SUCCESS");
+		responseDto.setStatus(StatusMessage.SUCCESS.name());
 		return responseDto;
 	}
-
-//	public ResponseDto register_V1_0(UserInfoDto userInfoDto) {
-//		ResponseDto responseDto = new ResponseDto();
-//		UserInfo userInfo = null;
-//		UserAgencyInfo userAgencyInfo = null;
-//		List<ErrorResponseDto> errResData = validationUserInfo.validateUserInfoData(userInfoDto);
-//		if (errResData.isEmpty()) {
-//			if (userInfoDto.userRole() != null && userInfoDto.userRole().equalsIgnoreCase(Role.AGENCY.name())) {
-//				userAgencyInfo = UserAgencyInfo.builder().userName(userInfoDto.userName())
-//						.userEmail(userInfoDto.userEmail())
-//						.userPassword(passwordEncoder.encode(userInfoDto.userPassword()))
-//						.userFullName(userInfoDto.fullName())
-//						.userCountryCode(masterService.getCountryCode(userInfoDto.countryName()))
-//						.userStateCode(masterService.getStateCode(userInfoDto.stateName()))
-//						.userDistrictCode(masterService.getDistrictCode(userInfoDto.districtName()))
-//						.userAddress(userInfoDto.userAddress())
-//						.userPhoneNumber(Long.parseLong(userInfoDto.userPhoneNumber())).isActive(true)
-//						.userRole(Role.AGENCY).build();
-//				masterService.saveUserAgencyInfoDetails(userAgencyInfo);
-//			} else {
-//				userInfo = new UserInfo();
-//				userInfo.setUserName(userInfoDto.userName());
-//				userInfo.setUserEmail(userInfoDto.userEmail());
-//				userInfo.setUserPassword(passwordEncoder.encode(userInfoDto.userPassword()));
-//				userInfo.setName(userInfoDto.fullName());
-//				userInfo.setUserCountryCode(masterService.getCountryCode(userInfoDto.countryName()));
-//				userInfo.setUserStateCode(masterService.getStateCode(userInfoDto.stateName()));
-//				userInfo.setUserDistrictCode(masterService.getDistrictCode(userInfoDto.districtName()));
-//				userInfo.setUserAddress(userInfoDto.userAddress());
-//				userInfo.setUserPancard(userInfoDto.userPancard());
-//				userInfo.setUserPassport(userInfoDto.userPassport());
-//				userInfo.setUserAadhar(userInfoDto.userAadhar());
-//				userInfo.setUserPhoneNumber(Long.parseLong(userInfoDto.userPhoneNumber()));
-//				userInfo.setUserAge(Integer.parseInt(userInfoDto.userAge()));
-//				userInfo.setUserRole(Role.USER);
-//				userInfo.setIsActive(true);
-//				masterService.saveUserInfoDetails(userInfo);
-//			}
-//			responseDto.setStatus("SUCCESS");
-//		} else {
-//			responseDto.setStatus("Fail");
-//			responseDto.setListErrResponse(errResData);
-//		}
-//		return responseDto;
-//
-//	}
 
 	@Override
 	public String signIn_V1_0(UserLoginInfoDto infoDto, HttpServletRequest request) {
@@ -149,26 +98,36 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 			if (userInfo == null || !userInfo.getIsActive()) {
 				throw new UsernameNotFoundException("User is inactive or not found");
 			}
-			loginInfo = new UserLoginInfo();
-			loginInfo.setUserName(infoDto.getUserName());
-			loginInfo.setLoginTime(new Timestamp(System.currentTimeMillis()));
-//				loginInfo.setLogoutTime(null);
-			loginInfo.setBrowser("chrome");
-			loginInfo.setLoginStatus(true);
-			loginInfo.setActiveTime(new Timestamp(System.currentTimeMillis()));
-			loginInfo.setIpAddress(ClientInfoDetails.getClientIpAddress(request));
-			masterService.saveUserLoginInfoDetails(loginInfo);
+			if (StringUtils.isValidObj(infoDto.getLoginType())
+					&& infoDto.getLoginType().equalsIgnoreCase(StatusMessage.SEND_OTP.name())) {
+				ResponseDto sendOtpToUser = masterService.sendOtpToUser(infoDto.getUserName());
+				return sendOtpToUser.getMessage();
+			} else {
+				if (masterService.verifyOtp(infoDto)) {
+					UserDetails user = userService.loadUserByUsername(infoDto.getUserName());
+					String token = jwtService.generateToken(user);
+					if (StringUtils.isValidObj(token)) {
+						loginInfo = new UserLoginInfo();
+						loginInfo.setUserName(infoDto.getUserName());
+						loginInfo.setLoginTime(StringUtils.getCurrentTimeStamp());
+						loginInfo.setBrowser(ClientInfoDetails.getClientBrowser(request));
+						loginInfo.setLoginStatus(true);
+						loginInfo.setActiveTime(new Timestamp(System.currentTimeMillis()));
+						loginInfo.setIpAddress(ClientInfoDetails.getClientIpAddress(request));
+						masterService.saveUserLoginInfoDetails(loginInfo);
+					}
+					return token;
+				}
+				return "Invalid OTP";
+			}
 
-			UserDetails user = userService.loadUserByUsername(infoDto.getUserName());
-			return jwtService.generateToken(user);
 		} else {
-			throw new UsernameNotFoundException("Invalid user request");
+			throw new UsernameNotFoundException("Invalid user name and password.");
 		}
-
 	}
 
 	@Override
-	public ResponseDto changePassword_V1_0(ChangePasswordRequest request) {
+	public ResponseDto changePassword_V1_0(UserLoginInfoDto request) {
 		ResponseDto responseDto = new ResponseDto();
 		UserInfo userInfoData = masterService.getDataByUserName(request.getUserName());
 		if (request.getNewPassword().equals(request.getConfirmPassword())) {
@@ -176,16 +135,16 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				String passwordChanged = passwordEncoder.encode(request.getNewPassword());
 				userInfoData.setUserPassword(passwordChanged);
 				masterService.saveUserInfoDetails(userInfoData);
-				responseDto.setStatus("SUCCESS");
+				responseDto.setStatus(StatusMessage.SUCCESS.name());
 				responseDto.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC001.getCode(), ServiceCode.SVC001.getMessage())));
 			} else {
-				responseDto.setStatus("FAIL");
+				responseDto.setStatus(StatusMessage.FAIL.name());
 				responseDto.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC023.getCode(), ServiceCode.SVC023.getMessage())));
 			}
 		} else {
-			responseDto.setStatus("FAIL");
+			responseDto.setStatus(StatusMessage.FAIL.name());
 			responseDto.setListErrResponse(
 					List.of(new ErrorResponseDto(ServiceCode.SVC024.getCode(), ServiceCode.SVC024.getMessage())));
 		}
@@ -194,121 +153,70 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	}
 
 	@Override
-	public ResponseDto forgetPassword_V1_0(ForgetPasswordRequest request) {
+	public ResponseDto forgetPassword_V1_0(UserLoginInfoDto request) {
 		ResponseDto responseDto = new ResponseDto();
 		UserInfo data = null;
 		if (!StringUtils.isEmpty(request.getUserName())) {
 			data = masterService.getDataByUserName(request.getUserName());
-
 		}
-//			else if (!StringUtils.isEmpty(request.getUserEmail())) {
-//				data = masterService.getDataByUSerEmail(request.getUserEmail());
-//			} 
-//			else {
-//				responseDto.setStatus("FAIL");
-//				responseDto.setListErrResponse(
-//						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
-//
-//			}
 		if (null != data) {
-			String otp = StringUtils.generateOtp();
-			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>> OTP:---" + otp);
-			OtpVerification otpVerification = masterService.getOtpVerificationData(request.getUserName());
-			if (null == otpVerification)
-				otpVerification = new OtpVerification();
-			otpVerification.setOtp(otp);
-			otpVerification.setUserEmail(data.getUserEmail());
-			otpVerification.setUserName(data.getUserName());
-			otpVerification.setExpiryTime(LocalDateTime.now().plusMinutes(30));
-			otpVerification.setVerified(true);
-			masterService.saveOtpVerificationDetails(otpVerification);
-			responseDto.setStatus("OTP sent successfully");
-		} else {
-			responseDto.setStatus("FAIL");
-			responseDto.setListErrResponse(
-					List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
-
-		}
-		return responseDto;
-
-	}
-
-	@Override
-	public ResponseDto verify_otp_V1_0(ForgetPasswordRequest request) {
-		ResponseDto responseDto = new ResponseDto();
-		OtpVerification otpVerification = null;
-		otpVerification = masterService.getOtpVerificationData(request.getUserName());
-		if (null != request.getOtp() && (request.getOtp().equals(otpVerification.getOtp())
-				&& otpVerification.getExpiryTime().isAfter(LocalDateTime.now()))) {
-			responseDto.setStatus("OTP verify Successfully...");
-		} else {
-			responseDto.setStatus("FAIL");
-			responseDto.setListErrResponse(
-					List.of(new ErrorResponseDto(ServiceCode.SVC027.getCode(), ServiceCode.SVC027.getMessage())));
-
-		}
-		return responseDto;
-	}
-
-	@Override
-	public ResponseDto resetPassword_v1_0(@RequestBody ChangePasswordRequest changePasswordRequest) {
-		ResponseDto dto = new ResponseDto();
-		if (null == changePasswordRequest.getNewPassword() || null == changePasswordRequest.getConfirmPassword()) {
-			dto.setStatus("FAIL");
-			dto.setListErrResponse(
-					List.of(new ErrorResponseDto(ServiceCode.SVC028.getCode(), ServiceCode.SVC028.getMessage())));
-		} else if (StringUtils.isEmpty(changePasswordRequest.getUserName())) {
-			dto.setStatus("FAIL");
-			dto.setListErrResponse(
-					List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
-		} else {
-			if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
-				log.info(changePasswordRequest.getNewPassword() + "*******"
-						+ changePasswordRequest.getConfirmPassword());
-				dto.setStatus("FAIL");
-				dto.setListErrResponse(
-						List.of(new ErrorResponseDto(ServiceCode.SVC024.getCode(), ServiceCode.SVC024.getMessage())));
+			if (StringUtils.isValidObj(request.getLoginType())
+					&& request.getLoginType().equalsIgnoreCase(StatusMessage.SEND_OTP.name())) {
+				ResponseDto sendOtpToUser = masterService.sendOtpToUser(request.getUserName());
+				return sendOtpToUser;
 			} else {
-				UserInfo userInfo = masterService.getDataByUserName(changePasswordRequest.getUserName());
-				if (StringUtils.isValidObj(userInfo)) {
-					OtpVerification otpData = masterService.getOtpVerificationData(changePasswordRequest.getUserName());
-					if (StringUtils.isValidObj(otpData)) {
-						if (otpData.isVerified() && otpData.getExpiryTime().isAfter(LocalDateTime.now())) {
-							boolean passwordValidate = validationUserInfo
-									.passwordValidate(changePasswordRequest.getNewPassword());
+				if (masterService.verifyOtp(request)) {
+					if (null == request.getNewPassword() || null == request.getConfirmPassword()) {
+						responseDto.setStatus(StatusMessage.FAIL.name());
+						responseDto.setListErrResponse(List.of(
+								new ErrorResponseDto(ServiceCode.SVC028.getCode(), ServiceCode.SVC028.getMessage())));
+					} else if (StringUtils.isEmpty(request.getUserName())) {
+						responseDto.setStatus(StatusMessage.FAIL.name());
+						responseDto.setListErrResponse(List.of(
+								new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
+					} else {
+
+						if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+							log.info(request.getNewPassword() + "*******" + request.getConfirmPassword());
+							responseDto.setStatus(StatusMessage.FAIL.name());
+							responseDto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC024.getCode(),
+									ServiceCode.SVC024.getMessage())));
+						} else {
+							UserInfo userInfo = masterService.getDataByUserName(request.getUserName());
+							boolean passwordValidate = validationUserInfo.passwordValidate(request.getNewPassword());
 							if (!passwordValidate) {
-								dto.setStatus("FAIL");
-								dto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC007.getCode(),
-										ServiceCode.SVC007.getMessage())));
+								responseDto.setStatus(StatusMessage.FAIL.name());
+								responseDto
+										.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC007.getCode(),
+												ServiceCode.SVC007.getMessage())));
 
 							} else {
-								userInfo.setUserPassword(
-										passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+								userInfo.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
 								masterService.saveUserInfoDetails(userInfo);
-								dto.setStatus("SUCCESS");
-								dto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC001.getCode(),
-										ServiceCode.SVC001.getMessage())));
+								responseDto.setStatus(StatusMessage.SUCCESS.name());
+								responseDto
+										.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC001.getCode(),
+												ServiceCode.SVC001.getMessage())));
 							}
-						} else {
-							dto.setStatus("FAIL");
-							dto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC027.getCode(),
-									ServiceCode.SVC027.getMessage())));
 
 						}
-					} else {
-						dto.setStatus("FAIL");
-						dto.setListErrResponse(List.of(
-								new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+
 					}
+
 				} else {
-					dto.setStatus("FAIL");
-					dto.setListErrResponse(List
-							.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+					responseDto.setStatus(StatusMessage.FAIL.name());
+					responseDto.setListErrResponse(List
+							.of(new ErrorResponseDto(ServiceCode.SVC027.getCode(), ServiceCode.SVC027.getMessage())));
 				}
 			}
-		}
 
-		return dto;
+		} else {
+			responseDto.setStatus(StatusMessage.FAIL.name());
+			responseDto.setListErrResponse(
+					List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
+		}
+		return responseDto;
+
 	}
 
 	@Override

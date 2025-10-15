@@ -60,7 +60,7 @@ public class StringUtils {
 		}
 	}
 
-	public static String generateOtp() {
+	public static String generateSixDigitOtp() {
 		StringBuilder builder = new StringBuilder();
 		Random random = new Random();
 		for (int i = 0; i < 6; i++) {
@@ -88,4 +88,21 @@ public class StringUtils {
 	public static Timestamp getCurrentTimeStamp() {
 		return new Timestamp(System.currentTimeMillis());
 	}
+
+	private static String getRandomAlphaNumeric(int length) {
+		String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		Random rnd = new Random();
+		StringBuilder sb = new StringBuilder(length);
+		for (int i = 0; i < length; i++) {
+			sb.append(chars.charAt(rnd.nextInt(chars.length())));
+		}
+		return sb.toString();
+	}
+
+	public static String generateCustomId() {
+		long timestamp = System.currentTimeMillis();
+		String randomStr = getRandomAlphaNumeric(6);
+		return timestamp + "-" + randomStr;
+	}
+
 }

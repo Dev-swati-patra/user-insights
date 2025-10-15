@@ -51,6 +51,19 @@ public class AuthenticateController {
 
 	}
 
+	@PostMapping("/changePassword/V1.0")
+	public ResponseEntity<ResponseDto> changePassword_V1_0(@RequestBody UserLoginInfoDto changePasswordRequest) {
+		ResponseDto dto = new ResponseDto();
+		try {
+			dto = authenticateService.changePassword_V1_0(changePasswordRequest);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
+
+	}
+
 	@PostMapping("/updateUser/V1.0")
 	public ResponseEntity<ResponseDto> updateUserprofile_V1_0(@RequestBody UserInfoDto userInfoDto) {
 		ResponseDto response = new ResponseDto();
@@ -75,7 +88,7 @@ public class AuthenticateController {
 	}
 
 	@PostMapping("/forgetPassword/V1.0")
-	public ResponseEntity<ResponseDto> forgetPassword_V1_0(@RequestBody ForgetPasswordRequest request) {
+	public ResponseEntity<ResponseDto> forgetPassword_V1_0(@RequestBody UserLoginInfoDto request) {
 		ResponseDto response = new ResponseDto();
 		try {
 			response = authenticateService.forgetPassword_V1_0(request);
@@ -87,44 +100,6 @@ public class AuthenticateController {
 
 	}
 
-	@PostMapping("/verify_otp/V1.0")
-	public ResponseEntity<ResponseDto> verify_otp_V1_0(@RequestBody ForgetPasswordRequest request) {
-		ResponseDto response = new ResponseDto();
-		try {
-			response = authenticateService.verify_otp_V1_0(request);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<>(response, HttpStatus.OK);
-
-	}
-
-	@PostMapping("/resetPassword/V1.0")
-	public ResponseEntity<ResponseDto> resetPassword_v1_0(@RequestBody ChangePasswordRequest passwordRequest) {
-		ResponseDto dto = new ResponseDto();
-		try {
-			dto = authenticateService.resetPassword_v1_0(passwordRequest);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<>(dto, HttpStatus.OK);
-
-	}
-
-	@PostMapping("/changePassword/V1.0")
-	public ResponseEntity<ResponseDto> changePassword_V1_0(@RequestBody ChangePasswordRequest changePasswordRequest) {
-		ResponseDto dto = new ResponseDto();
-		try {
-			dto = authenticateService.changePassword_V1_0(changePasswordRequest);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<ResponseDto>(dto, HttpStatus.OK);
-
-	}
-	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/adminApproved/V1.0")
 	public ResponseEntity<ResponseDto> adminApproved_V1_0(@RequestBody UserInfoDto userInfoDto) {
