@@ -28,7 +28,6 @@ public enum ServiceCode {
 	SVC023("SVC023", "Incorrect password!"), 
 	SVC024("SVC024", "Newpassword and confirmpassword must be same."),
 	SVC025("SVC025", "Please provide valid details."),
-//	SVC026("SVC026", "Either user name or user email is required."),
 	SVC026("SVC026", "User name does not exist."),
 	SVC027("SVC027", "OTP does not match."),
 	SVC028("SVC028", "New password and confirm password must be required."),
@@ -46,6 +45,9 @@ public enum ServiceCode {
 	SVC041("SVC041", "Opening time and closing time is mandatory."),
 	SVC042("SVC042", "User Email already exists."),
 	SVC043("SVC043", "Phone Number already exists."),
+	SVC044("SVC044", "No Booking reocr found"),
+	SVC045("SVC045", "Booking id reqired!!"),
+	SVC046("SVC046", "Remark is required"),
 	SVC100("SVC100", "Unexpected Error!");
 
 	String code;

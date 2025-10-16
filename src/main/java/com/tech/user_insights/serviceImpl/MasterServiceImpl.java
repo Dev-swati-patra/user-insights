@@ -172,7 +172,7 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public List<SpotDetails> fetchAllSpot(StatusMessage active) {
+	public List<SpotDetails> fetchAllSpot(String active) {
 		return spotDetailsRepo.findByStatus(active);
 	}
 
@@ -187,8 +187,8 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public List<BookingManagement> getBookManagementDataByUserId(Integer userId) {
-		return bookingManagementRepo.findByUserInfo_UserId(userId);
+	public List<BookingManagement> getBookManagementDataByUserName(String userName) {
+		return bookingManagementRepo.findByUsername(userName);
 	}
 
 	@Override
@@ -206,8 +206,8 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	@Override
-	public BookingManagement getBookingDetailsById(Long bookingId) {
-		return bookingManagementRepo.findById(bookingId).get();
+	public List<BookingManagement> getBookingDetailsByBookingRefId(String bookingRefId) {
+		return bookingManagementRepo.findByBookingRefId(bookingRefId);
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class MasterServiceImpl implements MasterService {
 
 	@Override
 	public List<UserAgencyInfo> getUserAgencyInfoDetails(String userName) {
-		return userAgencyInfoRepo.findByUserNameAndApprovalStatus(userName, StatusMessage.UNVERIFIED.name());
+		return userAgencyInfoRepo.findByUserNameAndApprovalStatus(userName, StatusMessage.UNVERIFIED);
 	}
 
 	@Override
@@ -235,20 +235,19 @@ public class MasterServiceImpl implements MasterService {
 
 	@Override
 	public List<UserAgencyInfo> getUserDataByUserEmail(String userEmail) {
-		return userAgencyInfoRepo.findByUserEmailAndApprovalStatusAndIsActive(userEmail,
-				StatusMessage.UNVERIFIED.name(), true);
+		return userAgencyInfoRepo.findByUserEmailAndApprovalStatusAndIsActive(userEmail, StatusMessage.UNVERIFIED,
+				true);
 	}
 
 	@Override
 	public List<UserAgencyInfo> getUserDataByUserPhoneNumber(Long userPhoneNumber) {
 		return userAgencyInfoRepo.findByUserPhoneNumberAndApprovalStatusAndIsActive(userPhoneNumber,
-				StatusMessage.UNVERIFIED.name(), true);
+				StatusMessage.UNVERIFIED, true);
 	}
 
 	@Override
 	public List<UserAgencyInfo> getUserDataByUserName(String userName) {
-		return userAgencyInfoRepo.findByUserNameAndApprovalStatusAndIsActive(userName, StatusMessage.UNVERIFIED.name(),
-				true);
+		return userAgencyInfoRepo.findByUserNameAndApprovalStatusAndIsActive(userName, StatusMessage.UNVERIFIED, true);
 	}
 
 	@Override
@@ -262,13 +261,15 @@ public class MasterServiceImpl implements MasterService {
 			String otp = StringUtils.generateSixDigitOtp();
 			otpVerification.setOtp(otp);
 			otpVerification.setVerified(false);
+			otpVerification.setUserName(userName);
+			otpVerification.setExpiryTime(LocalDateTime.now().plusMinutes(10));
 			otpVerificationRepo.save(otpVerification);
 			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>> OTP:---" + otp);
 			response.setStatus("SUCCESS");
 			response.setMessage("OTP generated successfully");
 			return response;
 		}
-		response.setStatus(StatusMessage.FAIL.name());
+		response.setStatus(StatusMessage.FAIL);
 		response.setMessage("Something went wrong");
 		return response;
 	}
@@ -318,6 +319,11 @@ public class MasterServiceImpl implements MasterService {
 		Collections.shuffle(passwordChars, random);
 
 		return passwordChars.stream().map(String::valueOf).collect(Collectors.joining());
+	}
+
+	@Override
+	public void saveAllBookingManagementDetails(List<BookingManagement> bookings) {
+		bookingManagementRepo.saveAll(bookings);
 	}
 
 }

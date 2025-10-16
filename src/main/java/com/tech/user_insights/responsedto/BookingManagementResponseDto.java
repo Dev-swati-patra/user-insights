@@ -2,27 +2,26 @@ package com.tech.user_insights.responsedto;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-
-import com.tech.user_insights.constants.BookingStatus;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class BookingManagementResponseDto {
 	private String userName;
-	private String spotName;
+	private List<String> spotName;
 	private Timestamp bookingDate;
-	private LocalDateTime visitDate;
+	private Timestamp visitDate;
 	private Integer numberOfPeople;
 	private BigDecimal totalAmount;
-	private BookingStatus paymentStatus;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
+	private String paymentStatus;
 	private String remarks;
-	private BookingStatus bookingStatus;
+	private String bookingStatus;
+	private String bookingRefId;
 }

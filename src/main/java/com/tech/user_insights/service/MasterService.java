@@ -2,7 +2,6 @@ package com.tech.user_insights.service;
 
 import java.util.List;
 
-import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.pojo.BookingManagement;
 import com.tech.user_insights.pojo.OtpVerification;
@@ -54,15 +53,15 @@ public interface MasterService {
 
 	void saveSpotDetails(SpotDetails spotDetails);
 
-	List<SpotDetails> fetchAllSpot(StatusMessage active);
+	List<SpotDetails> fetchAllSpot(String active);
 
 	SpotDetails getDataBySpotName(String spotName);
 
 	void saveBookingManagementDetails(BookingManagement bookingManagement);
 
-	List<BookingManagement> getBookManagementDataByUserId(Integer userId);
+	List<BookingManagement> getBookManagementDataByUserName(String userName);
 
-	BookingManagement getBookingDetailsById(Long bookingId);
+	List<BookingManagement> getBookingDetailsByBookingRefId(String bookingRefId);
 
 	void saveUserAgencyInfoDetails(UserAgencyInfo userAgencyInfo);
 
@@ -83,5 +82,7 @@ public interface MasterService {
 	Boolean verifyOtp(UserLoginInfoDto loginInfoDto);
 
 	String generateRandomPassword();
+
+	void saveAllBookingManagementDetails(List<BookingManagement> bookings);
 
 }

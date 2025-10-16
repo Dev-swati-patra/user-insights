@@ -68,13 +68,12 @@ public class SpotDetails {
 	private String email;
 
 	@Column(columnDefinition = "JSON")
-	private String images; 
+	private String images;
 	@Column(name = "average_rating", precision = 2, scale = 1)
 	private BigDecimal averageRating;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
-	private StatusMessage status;
+	private String status;
 
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
@@ -84,15 +83,15 @@ public class SpotDetails {
 
 	@OneToMany(mappedBy = "spotDetails", cascade = CascadeType.ALL)
 	private List<BookingManagement> bookings;
-	
-	@PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.updatedAt = LocalDateTime.now();
+	}
 
 }

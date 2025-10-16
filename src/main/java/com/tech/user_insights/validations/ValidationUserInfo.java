@@ -80,19 +80,6 @@ public class ValidationUserInfo {
 		if (StringUtils.isEmpty(infoDto.userAge())) {
 			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC018));
 		}
-//		if (StringUtils.isEmpty(infoDto.userPancard()) && StringUtils.isEmpty(infoDto.userPassport())
-//				&& StringUtils.isEmpty(infoDto.userAadhar())) {
-//			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC020));
-//		} else if (!StringUtils.isEmpty(infoDto.userPancard())) {
-//			if (!infoDto.userPancard().matches("^[A-Z]{5}[0-9]{4}[A-Z]{1}$")) {
-//				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC021));
-//			}
-//		} else if (!StringUtils.isEmpty(infoDto.userAadhar())) {
-//			if (!infoDto.userAadhar().matches("\\d{12}")) {
-//				errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC022));
-//			}
-//
-//		}
 		return errorRespnse;
 	}
 
@@ -249,6 +236,17 @@ public class ValidationUserInfo {
 		}
 		return errorRespnse;
 
+	}
+
+	public List<ErrorResponseDto> validateCancelBookingDetails(BookingManagementDto managementDto) {
+		List<ErrorResponseDto> errorRespnse = new ArrayList<ErrorResponseDto>();
+		if (StringUtils.isEmpty(managementDto.getBookingRefId())) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC045));
+		}
+		if (StringUtils.isEmpty(managementDto.getRemarks())) {
+			errorRespnse.add(StringUtils.setErrorResponse(ServiceCode.SVC046));
+		}
+		return errorRespnse;
 	}
 
 }

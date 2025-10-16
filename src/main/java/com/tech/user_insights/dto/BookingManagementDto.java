@@ -1,17 +1,21 @@
 package com.tech.user_insights.dto;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class BookingManagementDto {
-	private String spotName;
-	private LocalDateTime visitDate;
+	private List<String> spotName;
+	private Timestamp visitDate;
 	private Integer numberOfPeople;
-	private Long bookingId;
+	private String bookingRefId;
+	private String remarks;
 }

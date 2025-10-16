@@ -2,14 +2,12 @@ package com.tech.user_insights.pojo;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
-import com.tech.user_insights.constants.BookingStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.tech.user_insights.constants.StringUtils;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,7 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(schema = "core", name = "booking_management")
+@Table(schema = "users", name = "booking_management")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,6 +33,9 @@ public class BookingManagement {
 	@Column(name = "booking_id")
 	private Long bookingId;
 
+	@Column(name = "booking_ref_id")
+	private String bookingRefId;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private UserInfo userInfo;
@@ -43,11 +44,12 @@ public class BookingManagement {
 	@JoinColumn(name = "spot_id")
 	private SpotDetails spotDetails;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm a", timezone = "Asia/Kolkata")
 	@Column(name = "booking_date")
 	private Timestamp bookingDate;
 
 	@Column(name = "visit_date")
-	private LocalDateTime visitDate;
+	private Timestamp visitDate;
 
 	@Column(name = "number_of_people")
 	private Integer numberOfPeople;
@@ -55,31 +57,30 @@ public class BookingManagement {
 	@Column(name = "total_amount")
 	private BigDecimal totalAmount;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_status")
-	private BookingStatus paymentStatus;
+	private String paymentStatus;
 
 	@Column(name = "created_at")
-	private LocalDateTime createdAt;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm a", timezone = "Asia/Kolkata")
+	private Timestamp createdAt;
 
 	@Column(name = "updated_at")
-	private LocalDateTime updatedAt;
+	private Timestamp updatedAt;
 
 	@Column(name = "remarks")
 	private String remarks;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "booking_status")
-	private BookingStatus bookingStatus;
+	private String bookingStatus;
 
 	@PrePersist
 	protected void onCreate() {
-		this.createdAt = LocalDateTime.now();
+		this.createdAt = StringUtils.getCurrentTimeStamp();
 	}
 
 	@PreUpdate
 	protected void onUpdate() {
-		this.updatedAt = LocalDateTime.now();
+		this.updatedAt = StringUtils.getCurrentTimeStamp();
 	}
 
 }

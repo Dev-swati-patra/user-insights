@@ -55,13 +55,13 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 				spotDetails.setAverageRating(spotDetailsDto.getAverageRating());
 				spotDetails.setStatus(StatusMessage.ACTIVE);
 				masterService.saveSpotDetails(spotDetails);
-				dto.setStatus("SUCCESS");
+				dto.setStatus(StatusMessage.SUCCESS);
 			} else {
-				dto.setStatus("Fail");
+				dto.setStatus(StatusMessage.FAIL);
 				dto.setListErrResponse(errorResponseList);
 			}
 		} else {
-			dto.setStatus("FAIL");
+			dto.setStatus(StatusMessage.FAIL);
 			dto.setListErrResponse(
 					List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
 		}
@@ -80,15 +80,14 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 //				.collect(Collectors.toList());
 //		return allSpotL;
 //	}
-	
+
 	@Override
 	public List<SpotDetailsDto> fetchAllSpot_V1_0() {
 		List<SpotDetails> list = masterService.fetchAllSpot(StatusMessage.ACTIVE);
-		List<SpotDetailsDto> allSpotL = list.stream()
-				.map(spot -> modelMapper.map(spot, SpotDetailsDto.class))
+		List<SpotDetailsDto> allSpotL = list.stream().map(spot -> modelMapper.map(spot, SpotDetailsDto.class))
 				.collect(Collectors.toList());
 		return allSpotL;
-		
+
 	}
 
 	@Override
@@ -123,20 +122,20 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 							StringUtils.isEmpty(spotDetailsDto.getSpotCountry()) ? spotDetails.getSpotCountry()
 									: spotDetailsDto.getSpotCountry());
 					masterService.saveSpotDetails(spotDetails);
-					response.setStatus("SUCCESS");
+					response.setStatus(StatusMessage.SUCCESS);
 				} else {
-					response.setStatus("FAIL");
+					response.setStatus(StatusMessage.FAIL);
 					response.setListErrResponse(errResData);
 				}
 
 			} else {
-				response.setStatus("FAIL");
+				response.setStatus(StatusMessage.FAIL);
 				response.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC031.getCode(), ServiceCode.SVC031.getMessage())));
 			}
 
 		} else {
-			response.setStatus("FAIL");
+			response.setStatus(StatusMessage.FAIL);
 			response.setListErrResponse(
 					List.of(new ErrorResponseDto(ServiceCode.SVC030.getCode(), ServiceCode.SVC030.getMessage())));
 		}
@@ -153,15 +152,15 @@ public class SpotManagementServiceImpl implements SpotManagementService {
 			if (StringUtils.isValidObj(spotDetails)) {
 				spotDetails.setIsActive(false);
 				masterService.saveSpotDetails(spotDetails);
-				responseDto.setStatus("SUCCESS");
+				responseDto.setStatus(StatusMessage.SUCCESS);
 			} else {
-				responseDto.setStatus("FAIL");
+				responseDto.setStatus(StatusMessage.FAIL);
 				responseDto.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC031.getCode(), ServiceCode.SVC031.getMessage())));
 			}
 
 		} else {
-			responseDto.setStatus("FAIL");
+			responseDto.setStatus(StatusMessage.FAIL);
 			responseDto.setListErrResponse(
 					List.of(new ErrorResponseDto(ServiceCode.SVC030.getCode(), ServiceCode.SVC030.getMessage())));
 		}

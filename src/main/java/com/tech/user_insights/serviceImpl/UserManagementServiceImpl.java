@@ -1,16 +1,16 @@
 package com.tech.user_insights.serviceImpl;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.tech.user_insights.constants.BookingStatus;
 import com.tech.user_insights.constants.ServiceCode;
+import com.tech.user_insights.constants.StatusMessage;
 import com.tech.user_insights.constants.StringUtils;
 import com.tech.user_insights.dto.BookingManagementDto;
 import com.tech.user_insights.pojo.BookingManagement;
@@ -34,54 +34,54 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Override
 	public ResponseDto createBooking_V1_0(BookingManagementDto managementDto) {
 		ResponseDto response = new ResponseDto();
-		BookingManagement bookingManagement = null;
 		List<ErrorResponseDto> errorResponseList = new ArrayList<ErrorResponseDto>();
-
 		try {
+			if (!StringUtils.isValidObj(managementDto)) {
+				UserInfo userInfo = masterService.getDataByUserName(masterService.getUserName());
+				String randomId = StringUtils.generateCustomId();
+				List<BookingManagement> bookings = new ArrayList<>();
+				for (String sportName : managementDto.getSpotName()) {
+					SpotDetails spotDetails = masterService.getDataBySpotName(sportName);
+					if (StringUtils.isValidObj(userInfo) && StringUtils.isValidObj(spotDetails)) {
+						errorResponseList = validationUserInfo.validateBookManagementDetails(managementDto);
+						if (errorResponseList.isEmpty()) {
+							BookingManagement booking = BookingManagement.builder().bookingRefId(randomId)
+									.userInfo(userInfo).spotDetails(spotDetails)
+									.bookingDate(StringUtils.getCurrentTimeStamp())
+									.visitDate(managementDto.getVisitDate())
+									.numberOfPeople(managementDto.getNumberOfPeople())
+									.totalAmount(spotDetails.getPricePerPerson()
+											.multiply(BigDecimal.valueOf(managementDto.getNumberOfPeople())))
+									.bookingStatus(StatusMessage.BOOKED).paymentStatus(StatusMessage.PENDING)
+									.remarks(null).build();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus("FAIL");
-			response.setListErrResponse(List
-					.of(new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value() + "", "Something went wrong")));
-		}
-
-		if (!StringUtils.isEmpty(managementDto.getSpotName())) {
-			UserInfo userInfo = masterService.getDataByUserName(masterService.getUserName());
-			SpotDetails spotDetails = masterService.getDataBySpotName(managementDto.getSpotName());
-			if (StringUtils.isValidObj(userInfo) && StringUtils.isValidObj(spotDetails)) {
-				errorResponseList = validationUserInfo.validateBookManagementDetails(managementDto);
-				if (errorResponseList.isEmpty()) {
-					bookingManagement = new BookingManagement();
-					bookingManagement.setUserInfo(userInfo);
-					bookingManagement.setSpotDetails(spotDetails);
-					bookingManagement.setBookingDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-					bookingManagement.setVisitDate(managementDto.getVisitDate());
-					bookingManagement.setNumberOfPeople(managementDto.getNumberOfPeople());
-					BigDecimal total = spotDetails.getPricePerPerson()
-							.multiply(BigDecimal.valueOf(managementDto.getNumberOfPeople()));
-					bookingManagement.setTotalAmount(total);
-					bookingManagement.setBookingStatus(BookingStatus.BOOKED);
-					bookingManagement.setPaymentStatus(BookingStatus.PENDING);
-					bookingManagement.setRemarks(null);
-					masterService.saveBookingManagementDetails(bookingManagement);
-					response.setStatus("SUCCESS");
-				} else {
-					response.setStatus("FAIL");
-					response.setListErrResponse(errorResponseList);
+							bookings.add(booking);
+						} else {
+							response.setStatus(StatusMessage.FAIL);
+							response.setListErrResponse(errorResponseList);
+						}
+					} else {
+						response.setStatus(StatusMessage.FAIL);
+						response.setListErrResponse(List.of(
+								new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage()),
+								new ErrorResponseDto(ServiceCode.SVC031.getCode(), ServiceCode.SVC031.getMessage())));
+					}
+				}
+				if (!StringUtils.isEmptyList(bookings)) {
+					masterService.saveAllBookingManagementDetails(bookings);
+					response.setStatus(StatusMessage.SUCCESS);
 				}
 			} else {
-				response.setStatus("FAIL");
+				response.setStatus(StatusMessage.FAIL);
 				response.setListErrResponse(
-						List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage()),
-								new ErrorResponseDto(ServiceCode.SVC031.getCode(), ServiceCode.SVC031.getMessage())));
+						List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage()),
+								new ErrorResponseDto(ServiceCode.SVC030.getCode(), ServiceCode.SVC030.getMessage())));
 			}
-
-		} else {
-			response.setStatus("FAIL");
-			response.setListErrResponse(
-					List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage()),
-							new ErrorResponseDto(ServiceCode.SVC030.getCode(), ServiceCode.SVC030.getMessage())));
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(StatusMessage.FAIL);
+			response.setListErrResponse(List
+					.of(new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value() + "", "Something went wrong")));
 		}
 		return response;
 	}
@@ -89,31 +89,31 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Override
 	public ResponseDto fetchUserBooking_V1_0(BookingManagementDto managementDto) {
 		ResponseDto response = new ResponseDto();
-		BookingManagementResponseDto dto = null;
-		List<BookingManagementResponseDto> bookResponseDtoL = new ArrayList<BookingManagementResponseDto>();
+		List<BookingManagementResponseDto> bookingResponse = new ArrayList<BookingManagementResponseDto>();
 		if (!StringUtils.isEmpty(masterService.getUserName())) {
-			UserInfo user = masterService.getDataByUserName(masterService.getUserName());
-			List<BookingManagement> bookManagementDataL = masterService.getBookManagementDataByUserId(user.getUserId());
-			for (BookingManagement bookManagementData : bookManagementDataL) {
-				dto = new BookingManagementResponseDto();
-				dto.setUserName(bookManagementData.getUserInfo().getUserName());
-				dto.setSpotName(bookManagementData.getSpotDetails().getSpotName());
-				dto.setBookingDate(bookManagementData.getBookingDate());
-				dto.setVisitDate(bookManagementData.getVisitDate());
-				dto.setNumberOfPeople(bookManagementData.getNumberOfPeople());
-				dto.setTotalAmount(bookManagementData.getTotalAmount());
-				dto.setPaymentStatus(bookManagementData.getPaymentStatus());
-				dto.setCreatedAt(bookManagementData.getCreatedAt());
-				dto.setUpdatedAt(bookManagementData.getUpdatedAt());
-				dto.setRemarks(bookManagementData.getRemarks());
-				dto.setBookingStatus(bookManagementData.getBookingStatus());
-				bookResponseDtoL.add(dto);
-			}
-			response.setBookingManagementResponseDto(bookResponseDtoL);
-			response.setStatus("SUCCESS");
+			List<BookingManagement> bookings = masterService
+					.getBookManagementDataByUserName(masterService.getUserName());
+			Map<String, List<BookingManagement>> groupedBookings = bookings.stream()
+					.collect(Collectors.groupingBy(BookingManagement::getBookingRefId));
 
+			for (Map.Entry<String, List<BookingManagement>> entry : groupedBookings.entrySet()) {
+				String bookingRefId = entry.getKey();
+				List<BookingManagement> bookingList = entry.getValue();
+				BookingManagement firstBooking = bookingList.get(0);
+				List<String> spotNames = bookingList.stream().map(b -> b.getSpotDetails().getSpotName()).distinct()
+						.collect(Collectors.toList());
+				BookingManagementResponseDto dto = BookingManagementResponseDto.builder()
+						.userName(firstBooking.getUserInfo().getUserName()).spotName(spotNames)
+						.bookingDate(firstBooking.getBookingDate()).visitDate(firstBooking.getVisitDate())
+						.numberOfPeople(firstBooking.getNumberOfPeople()).totalAmount(firstBooking.getTotalAmount())
+						.bookingStatus(firstBooking.getBookingStatus()).remarks(firstBooking.getRemarks())
+						.paymentStatus(firstBooking.getPaymentStatus()).bookingRefId(bookingRefId).build();
+				bookingResponse.add(dto);
+			}
+			response.setBookingManagementResponseDto(bookingResponse);
+			response.setStatus(StatusMessage.SUCCESS);
 		} else {
-			response.setStatus("FAIL");
+			response.setStatus(StatusMessage.FAIL);
 			response.setListErrResponse(
 					List.of(new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
 		}
@@ -123,28 +123,38 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Override
 	public ResponseDto cancelBooking_V1_0(BookingManagementDto managementDto) {
 		ResponseDto response = new ResponseDto();
+		List<ErrorResponseDto> errorResponseList = new ArrayList<ErrorResponseDto>();
 		try {
-			if (null != managementDto && null != managementDto.getBookingId()) {
-				BookingManagement bookingManagement = masterService.getBookingDetailsById(managementDto.getBookingId());
-				if (null != bookingManagement) {
-					bookingManagement.setBookingStatus(BookingStatus.CANCELLED);
-					masterService.saveBookingManagementDetails(bookingManagement);
-					response.setStatus("SUCCESS");
-				} else {
-					response.setStatus("FAIL");
-					response.setListErrResponse(List
-							.of(new ErrorResponseDto(ServiceCode.SVC039.getCode(), ServiceCode.SVC039.getMessage())));
-				}
+			if (StringUtils.isValidObj(managementDto)) {
+				errorResponseList = validationUserInfo.validateCancelBookingDetails(managementDto);
+				if (!StringUtils.isEmptyList(errorResponseList)) {
 
+					List<BookingManagement> bookingList = masterService
+							.getBookingDetailsByBookingRefId(managementDto.getBookingRefId());
+					if (!StringUtils.isEmptyList(bookingList)) {
+						bookingList.forEach(bl -> {
+							bl.setBookingStatus(StatusMessage.CANCELLED);
+							bl.setRemarks(managementDto.getRemarks());
+						});
+						masterService.saveAllBookingManagementDetails(bookingList);
+						response.setStatus(StatusMessage.SUCCESS);
+					} else {
+						response.setStatus(StatusMessage.FAIL);
+						response.setListErrResponse(List.of(
+								new ErrorResponseDto(ServiceCode.SVC044.getCode(), ServiceCode.SVC044.getMessage())));
+					}
+				} else {
+					response.setStatus(StatusMessage.FAIL);
+					response.setListErrResponse(errorResponseList);
+				}
 			} else {
-				response.setStatus("FAIL");
+				response.setStatus(StatusMessage.FAIL);
 				response.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC038.getCode(), ServiceCode.SVC038.getMessage())));
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.setStatus("FAIL");
+			response.setStatus(StatusMessage.FAIL);
 		}
 
 		return response;
@@ -154,30 +164,30 @@ public class UserManagementServiceImpl implements UserManagementService {
 	public ResponseDto updateUserBooking_V1_0(BookingManagementDto managementDto) {
 		ResponseDto response = new ResponseDto();
 		try {
-			if (null != managementDto && null != managementDto.getBookingId()) {
-				BookingManagement bookingManagement = masterService.getBookingDetailsById(managementDto.getBookingId());
-				if (null != bookingManagement) {
-//					bookingManagement.setSpotDetails(null);
-					bookingManagement.setNumberOfPeople(managementDto.getNumberOfPeople());
-					bookingManagement.setVisitDate(managementDto.getVisitDate());
-					bookingManagement.setBookingStatus(BookingStatus.BOOKED);
-					masterService.saveBookingManagementDetails(bookingManagement);
-					response.setStatus("SUCCESS");
-				} else {
-					response.setStatus("FAIL");
-					response.setListErrResponse(List
-							.of(new ErrorResponseDto(ServiceCode.SVC039.getCode(), ServiceCode.SVC039.getMessage())));
-				}
+			if (null != managementDto && null != managementDto.getBookingRefId()) {
+//				BookingManagement bookingManagement = masterService
+//						.getBookingDetailsByBookingRefId(managementDto.getBookingRefId());
+//				if (null != bookingManagement) {
+//					bookingManagement.setNumberOfPeople(managementDto.getNumberOfPeople());
+//					bookingManagement.setVisitDate(managementDto.getVisitDate());
+//					bookingManagement.setBookingStatus(BookingStatus.BOOKED);
+//					masterService.saveBookingManagementDetails(bookingManagement);
+//					response.setStatus(StatusMessage.SUCCESS);
+//				} else {
+//					response.setStatus(StatusMessage.FAIL);
+//					response.setListErrResponse(List
+//							.of(new ErrorResponseDto(ServiceCode.SVC039.getCode(), ServiceCode.SVC039.getMessage())));
+//				}
 
 			} else {
-				response.setStatus("FAIL");
+				response.setStatus(StatusMessage.FAIL);
 				response.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC038.getCode(), ServiceCode.SVC038.getMessage())));
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.setStatus("FAIL");
+			response.setStatus(StatusMessage.FAIL);
 		}
 
 		return response;

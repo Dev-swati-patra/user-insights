@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tech.user_insights.dto.ChangePasswordRequest;
-import com.tech.user_insights.dto.ForgetPasswordRequest;
 import com.tech.user_insights.dto.UserInfoDto;
 import com.tech.user_insights.dto.UserLoginInfoDto;
 import com.tech.user_insights.responsedto.ResponseDto;

@@ -6,13 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.tech.user_insights.pojo.SpotDetails;
-import com.tech.user_insights.constants.StatusMessage;
 
 @Repository
 public interface SpotDetailsRepo extends JpaRepository<SpotDetails, Long> {
 
 	SpotDetails findBySpotName(String spotName);
 
-	List<SpotDetails> findByStatus(StatusMessage status);
+	List<SpotDetails> findByStatus(String status);
 
 }

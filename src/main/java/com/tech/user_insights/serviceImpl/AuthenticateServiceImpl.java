@@ -51,7 +51,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 		List<ErrorResponseDto> errResData = validationUserInfo.validateUserInfoData(userInfoDto);
 		if (!errResData.isEmpty()) {
-			responseDto.setStatus(StatusMessage.FAIL.name());
+			responseDto.setStatus(StatusMessage.FAIL);
 			responseDto.setListErrResponse(errResData);
 			return responseDto;
 		}
@@ -65,7 +65,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		if (Role.AGENCY.name().equalsIgnoreCase(userInfoDto.userRole())) {
 			List<ErrorResponseDto> errorAgencyData = validationUserInfo.valiadteUserAgencyData(userInfoDto);
 			if (!errorAgencyData.isEmpty()) {
-				responseDto.setStatus(StatusMessage.FAIL.name());
+				responseDto.setStatus(StatusMessage.FAIL);
 				responseDto.setListErrResponse(errResData);
 				return responseDto;
 			}
@@ -73,7 +73,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					.userEmail(userInfoDto.userEmail()).userPassword(encodedPassword)
 					.userFullName(userInfoDto.fullName()).userCountryCode(countryCode).userStateCode(stateCode)
 					.userDistrictCode(districtCode).userAddress(userInfoDto.userAddress()).userPhoneNumber(phoneNumber)
-					.isActive(true).userRole(Role.AGENCY).approvalStatus(StatusMessage.UNVERIFIED.name())
+					.isActive(true).userRole(Role.AGENCY).approvalStatus(StatusMessage.UNVERIFIED)
 					.createdAt(StringUtils.getCurrentTimeStamp()).build();
 			masterService.saveUserAgencyInfoDetails(userAgencyInfo);
 		} else {
@@ -84,7 +84,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					.isActive(true).build();
 			masterService.saveUserInfoDetails(userInfo);
 		}
-		responseDto.setStatus(StatusMessage.SUCCESS.name());
+		responseDto.setStatus(StatusMessage.SUCCESS);
 		return responseDto;
 	}
 
@@ -99,7 +99,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				throw new UsernameNotFoundException("User is inactive or not found");
 			}
 			if (StringUtils.isValidObj(infoDto.getLoginType())
-					&& infoDto.getLoginType().equalsIgnoreCase(StatusMessage.SEND_OTP.name())) {
+					&& infoDto.getLoginType().equalsIgnoreCase(StatusMessage.SEND_OTP)) {
 				ResponseDto sendOtpToUser = masterService.sendOtpToUser(infoDto.getUserName());
 				return sendOtpToUser.getMessage();
 			} else {
@@ -135,16 +135,16 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 				String passwordChanged = passwordEncoder.encode(request.getNewPassword());
 				userInfoData.setUserPassword(passwordChanged);
 				masterService.saveUserInfoDetails(userInfoData);
-				responseDto.setStatus(StatusMessage.SUCCESS.name());
+				responseDto.setStatus(StatusMessage.SUCCESS);
 				responseDto.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC001.getCode(), ServiceCode.SVC001.getMessage())));
 			} else {
-				responseDto.setStatus(StatusMessage.FAIL.name());
+				responseDto.setStatus(StatusMessage.FAIL);
 				responseDto.setListErrResponse(
 						List.of(new ErrorResponseDto(ServiceCode.SVC023.getCode(), ServiceCode.SVC023.getMessage())));
 			}
 		} else {
-			responseDto.setStatus(StatusMessage.FAIL.name());
+			responseDto.setStatus(StatusMessage.FAIL);
 			responseDto.setListErrResponse(
 					List.of(new ErrorResponseDto(ServiceCode.SVC024.getCode(), ServiceCode.SVC024.getMessage())));
 		}
@@ -161,31 +161,31 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 		}
 		if (null != data) {
 			if (StringUtils.isValidObj(request.getLoginType())
-					&& request.getLoginType().equalsIgnoreCase(StatusMessage.SEND_OTP.name())) {
+					&& request.getLoginType().equalsIgnoreCase(StatusMessage.SEND_OTP)) {
 				ResponseDto sendOtpToUser = masterService.sendOtpToUser(request.getUserName());
 				return sendOtpToUser;
 			} else {
 				if (masterService.verifyOtp(request)) {
 					if (null == request.getNewPassword() || null == request.getConfirmPassword()) {
-						responseDto.setStatus(StatusMessage.FAIL.name());
+						responseDto.setStatus(StatusMessage.FAIL);
 						responseDto.setListErrResponse(List.of(
 								new ErrorResponseDto(ServiceCode.SVC028.getCode(), ServiceCode.SVC028.getMessage())));
 					} else if (StringUtils.isEmpty(request.getUserName())) {
-						responseDto.setStatus(StatusMessage.FAIL.name());
+						responseDto.setStatus(StatusMessage.FAIL);
 						responseDto.setListErrResponse(List.of(
 								new ErrorResponseDto(ServiceCode.SVC029.getCode(), ServiceCode.SVC029.getMessage())));
 					} else {
 
 						if (!request.getNewPassword().equals(request.getConfirmPassword())) {
 							log.info(request.getNewPassword() + "*******" + request.getConfirmPassword());
-							responseDto.setStatus(StatusMessage.FAIL.name());
+							responseDto.setStatus(StatusMessage.FAIL);
 							responseDto.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC024.getCode(),
 									ServiceCode.SVC024.getMessage())));
 						} else {
 							UserInfo userInfo = masterService.getDataByUserName(request.getUserName());
 							boolean passwordValidate = validationUserInfo.passwordValidate(request.getNewPassword());
 							if (!passwordValidate) {
-								responseDto.setStatus(StatusMessage.FAIL.name());
+								responseDto.setStatus(StatusMessage.FAIL);
 								responseDto
 										.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC007.getCode(),
 												ServiceCode.SVC007.getMessage())));
@@ -193,7 +193,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 							} else {
 								userInfo.setUserPassword(passwordEncoder.encode(request.getNewPassword()));
 								masterService.saveUserInfoDetails(userInfo);
-								responseDto.setStatus(StatusMessage.SUCCESS.name());
+								responseDto.setStatus(StatusMessage.SUCCESS);
 								responseDto
 										.setListErrResponse(List.of(new ErrorResponseDto(ServiceCode.SVC001.getCode(),
 												ServiceCode.SVC001.getMessage())));
@@ -204,14 +204,14 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 					}
 
 				} else {
-					responseDto.setStatus(StatusMessage.FAIL.name());
+					responseDto.setStatus(StatusMessage.FAIL);
 					responseDto.setListErrResponse(List
 							.of(new ErrorResponseDto(ServiceCode.SVC027.getCode(), ServiceCode.SVC027.getMessage())));
 				}
 			}
 
 		} else {
-			responseDto.setStatus(StatusMessage.FAIL.name());
+			responseDto.setStatus(StatusMessage.FAIL);
 			responseDto.setListErrResponse(
 					List.of(new ErrorResponseDto(ServiceCode.SVC026.getCode(), ServiceCode.SVC026.getMessage())));
 		}
